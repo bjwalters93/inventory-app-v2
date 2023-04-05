@@ -87,7 +87,7 @@ function App({ db }) {
 
   return (
     <div className="App">
-      <div>Hello world!</div>
+      <div>Inventory App v2</div>
       <button onClick={postData}>Post Data</button>
       <button onClick={getAllData}>Get All Data</button>
       <button onClick={getSelectData}>Get Select Data</button>
