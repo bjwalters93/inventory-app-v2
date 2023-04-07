@@ -34,15 +34,6 @@ export async function action({ request }) {
     url: "https://capable-chaja-bdc3d3.netlify.app/",
     // This must be true.
     handleCodeInApp: true,
-    iOS: {
-      bundleId: "com.example.ios",
-    },
-    android: {
-      packageName: "com.example.android",
-      installApp: true,
-      minimumVersion: "12",
-    },
-    dynamicLinkDomain: "example.page.link",
   };
   sendSignInLinkToEmail(auth, email, actionCodeSettings)
     .then(() => {
