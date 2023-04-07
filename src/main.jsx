@@ -46,15 +46,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-console.log("authorization:", auth);
 const db = getFirestore(app);
-console.log("data base:", db);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
       <Route index element={<SignIn />} action={signInAction} auth={auth} />
-      <Route path=":userId" element={<h1>If user is logged in element</h1>} />
+      <Route path=":uid" element={<h1>If user is logged in element</h1>} />
       <Route path="sign-up" element={<SignUp />} action={signUpAction} />
       <Route path="about" element={<h1>About</h1>} action={signUpAction} />
       {/* <Route path="test-data" element={<TestData db={db} />} /> */}
