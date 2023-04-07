@@ -29,43 +29,10 @@ export async function action({ request }) {
 
 export default function SignIn() {
   return (
-    <Paper
-      elevation={0}
-      className="sign_in_container"
-      //   sx={{
-      //     display: "flex",
-      //     flexDirection: "column",
-      //     maxWidth: "500px",
-      //     margin: "0 auto",
-      //     padding: "20px 30px 50px 30px",
-      //     boxShadow: "0px 0px 10px 3px rgba(0, 0, 0, 0.2)",
-      //   }}
-    >
-      <p
-        style={{
-          fontSize: "26px",
-          textAlign: "center",
-          margin: "0 0 0 0",
-          fontWeight: "bold",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "'Libre Barcode 39', cursive",
-            color: "#ed6c02",
-          }}
-        >
-          III
-        </span>
-        <span
-          style={{
-            fontFamily: "'Righteous', cursive",
-            marginLeft: "5px",
-            color: "#1976d2",
-          }}
-        >
-          Inventory App v2
-        </span>
+    <Paper elevation={0} className="sign_in_container">
+      <p className="logo_container">
+        <span className="logo_barcode_form">III</span>
+        <span className="logo_text_form">Inventory App v2</span>
       </p>
 
       <h2 style={{ margin: "0px 0 10px 0" }}>Sign in</h2>
@@ -76,15 +43,7 @@ export default function SignIn() {
         }}
       >
         <Form method="post">
-          <Paper
-            elevation={0}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              //   border: "1px solid red",
-            }}
-          >
+          <Paper elevation={0} className="inputs_flex_container">
             <TextField
               sx={{
                 marginBottom: "30px",

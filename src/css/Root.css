@@ -1,3 +1,29 @@
+.header_container {
+  padding: 20px;
+  box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.2);
+  margin: 0 0 30px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo_container_header {
+  margin: 0 0 0 20px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.logo_barcode_header {
+  font-family: "Libre Barcode 39", cursive;
+  color: #ed6c02;
+}
+
+.logo_text_header {
+  font-family: "Righteous", cursive;
+  margin-left: 5px;
+  color: #1976d2;
+}
+
 .about_active {
   color: #ed6c02;
   text-decoration: underline;
