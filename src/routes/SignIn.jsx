@@ -17,6 +17,7 @@ export async function action({ request }) {
       // Signed in
       const user = userCredential.user;
       console.log(user);
+      console.log("Sign in successful");
       // ...
     })
     .catch((error) => {

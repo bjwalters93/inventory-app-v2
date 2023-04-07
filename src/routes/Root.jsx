@@ -2,9 +2,39 @@ import "../css/Root.css";
 import { Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 export default function Root() {
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      console.log("user is signed in", "userId:", uid);
+      console.log("user:", user);
+      // ...
+    } else {
+      console.log("user not signed in");
+      // User is signed out
+      // ...
+    }
+  });
+
+  function userSignOut() {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        console.log("Sign-out successful");
+      })
+      .catch((error) => {
+        // An error happened.
+        console.log("Sign-out error");
+      });
+  }
   return (
     <Box>
       <Paper elevation={0} square className="header_container">
@@ -12,7 +42,18 @@ export default function Root() {
           <span className="logo_barcode_header">III</span>
           <span className="logo_text_header">Inventory App v2</span>
         </p>
-        <Paper elevation={0}>
+        <Paper
+          elevation={0}
+          style={{ display: "flex", alignItems: "baseline" }}
+        >
+          <NavLink
+            to="."
+            className={({ isActive }) =>
+              isActive ? "about_active" : "about_default"
+            }
+          >
+            Home
+          </NavLink>
           <NavLink
             to="sign-up"
             className={({ isActive }) =>
@@ -29,6 +70,14 @@ export default function Root() {
           >
             About
           </NavLink>
+          <Button
+            variant="text"
+            size="small"
+            onClick={userSignOut}
+            sx={{ fontWeight: "bold" }}
+          >
+            Sign out
+          </Button>
         </Paper>
       </Paper>
       <Outlet />
