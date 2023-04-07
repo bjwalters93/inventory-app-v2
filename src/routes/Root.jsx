@@ -1,7 +1,24 @@
+import "../css/Root.css";
 import { Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+
+// navLinkStylesActive = {
+//     color: "#ed6c02"
+//   textDecoration: "underline",
+//   margin: "0 20px 0 20px";
+//   font-size: "20px";
+//   font-weight: "bold";
+// }
+
+// navLinkStylesDefault = {
+//     font-size: "20px";
+//   font-weight: "bold";
+//   text-decoration: "none";
+//   margin: "0 20px 0 20px";
+//   color: "#1976d2";
+// }
 
 export default function Root() {
   return (
@@ -42,24 +59,17 @@ export default function Root() {
         <Paper elevation={0}>
           <NavLink
             to="sign-up"
-            style={{
-              fontSize: "20px",
-              fontWeight: "bold",
-              textDecoration: "none",
-              color: "#1976d2",
-            }}
-            // className={({ isActive, isPending }) =>
-            //   isPending ? "pending" : isActive ? "active" : ""
-            // }
+            className={({ isActive }) =>
+              isActive ? "about_active" : "about_default"
+            }
           >
             Sign up
           </NavLink>
           <NavLink
-            className="about_link"
             to="about"
-            // className={({ isActive }) =>
-            //   isActive ? "about_active" : "about_link"
-            // }
+            className={({ isActive }) =>
+              isActive ? "about_active" : "about_default"
+            }
           >
             About
           </NavLink>

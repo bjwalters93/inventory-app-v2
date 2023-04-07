@@ -1,3 +1,4 @@
+import "../css/SignIn.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Form } from "react-router-dom";
@@ -30,14 +31,15 @@ export default function SignIn() {
   return (
     <Paper
       elevation={0}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        maxWidth: "500px",
-        margin: "0 auto",
-        padding: "20px 30px 50px 30px",
-        boxShadow: "0px 0px 10px 3px rgba(0, 0, 0, 0.2)",
-      }}
+      className="sign_in_container"
+      //   sx={{
+      //     display: "flex",
+      //     flexDirection: "column",
+      //     maxWidth: "500px",
+      //     margin: "0 auto",
+      //     padding: "20px 30px 50px 30px",
+      //     boxShadow: "0px 0px 10px 3px rgba(0, 0, 0, 0.2)",
+      //   }}
     >
       <p
         style={{
