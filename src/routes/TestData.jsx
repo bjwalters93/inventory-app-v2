@@ -15,41 +15,51 @@ import { useOutletContext } from "react-router-dom";
 export default function TestData({ db }) {
   const [userId, setUserId] = useOutletContext();
   async function postData() {
-    const usersRef = collection(db, "users");
-    const docRef = doc(db, "users", userId);
-    const docSnap = await getDoc(docRef);
+    const usersRef = collection(db, userId);
 
-    if (docSnap.exists()) {
-      await updateDoc(docRef, {
-        snickers: {
-          quantity: 1000,
-          itemNumber: "00000001",
-        },
-      });
-      console.log(
-        "Document exists, updating document! Document data:",
-        docSnap.data()
-      );
-    } else {
-      await setDoc(doc(usersRef, userId), {
-        popcorn: {
-          quantity: 1000,
-          itemNumber: "00000001",
-        },
-      });
-      console.log("Document doesn't exist adding new doc!!");
-    }
+    await setDoc(doc(usersRef, "snickers"), {
+      snickers: "snickers",
+      quantity: 100,
+    });
   }
 
+  //   const [userId, setUserId] = useOutletContext();
+  //   async function postData() {
+  //     const usersRef = collection(db, "users");
+  //     const docRef = doc(db, "users", userId);
+  //     const docSnap = await getDoc(docRef);
+
+  //     if (docSnap.exists()) {
+  //       await updateDoc(docRef, {
+  //         snickers: {
+  //           quantity: 1000,
+  //           itemNumber: "00000001",
+  //         },
+  //       });
+  //       console.log(
+  //         "Document exists, updating document! Document data:",
+  //         docSnap.data()
+  //       );
+  //     } else {
+  //       await setDoc(doc(usersRef, userId), {
+  //         popcorn: {
+  //           quantity: 1000,
+  //           itemNumber: "00000001",
+  //         },
+  //       });
+  //       console.log("Document doesn't exist adding new doc!!");
+  //     }
+  //   }
+
   async function getAllData() {
-    const querySnapshot = await getDocs(collection(db, "users"));
+    const querySnapshot = await getDocs(collection(db, userId));
     querySnapshot.forEach((doc) => {
       console.log(`${doc.id} => ${doc.data().name}`);
     });
   }
 
   async function getSelectData() {
-    const docRef = doc(db, "users", userId);
+    const docRef = doc(db, userId, "snickers");
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -60,14 +70,14 @@ export default function TestData({ db }) {
   }
 
   async function deleteData() {
-    const querySnapshot = await getDocs(collection(db, "users"));
+    const querySnapshot = await getDocs(collection(db, userId));
     const delArr = [];
     querySnapshot.forEach((doc) => {
       delArr.push(doc.id);
     });
     console.log(delArr);
     for (let i = 0; i < delArr.length; i++) {
-      await deleteDoc(doc(db, "users", delArr[i]));
+      await deleteDoc(doc(db, userId, delArr[i]));
     }
   }
 
