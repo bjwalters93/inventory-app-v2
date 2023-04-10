@@ -5,63 +5,51 @@ import {
   doc,
   deleteDoc,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
+import { useOutletContext } from "react-router-dom";
+
+// -----------------NOTES--------
+// to access a data property ---> .data().property
 
 export default function TestData({ db }) {
+  const [userId, setUserId] = useOutletContext();
   async function postData() {
-    const citiesRef = collection(db, "cities");
+    const usersRef = collection(db, "users");
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
 
-    await setDoc(doc(citiesRef, "SF"), {
-      name: "San Francisco",
-      state: "CA",
-      country: "USA",
-      capital: false,
-      population: 860000,
-      regions: ["west_coast", "norcal"],
-    });
-    await setDoc(doc(citiesRef, "LA"), {
-      name: "Los Angeles",
-      state: "CA",
-      country: "USA",
-      capital: false,
-      population: 3900000,
-      regions: ["west_coast", "socal"],
-    });
-    await setDoc(doc(citiesRef, "DC"), {
-      name: "Washington, D.C.",
-      state: null,
-      country: "USA",
-      capital: true,
-      population: 680000,
-      regions: ["east_coast"],
-    });
-    await setDoc(doc(citiesRef, "TOK"), {
-      name: "Tokyo",
-      state: null,
-      country: "Japan",
-      capital: true,
-      population: 9000000,
-      regions: ["kanto", "honshu"],
-    });
-    await setDoc(doc(citiesRef, "BJ"), {
-      name: "Beijing",
-      state: null,
-      country: "China",
-      capital: true,
-      population: 21500000,
-      regions: ["jingjinji", "hebei"],
-    });
+    if (docSnap.exists()) {
+      await updateDoc(docRef, {
+        snickers: {
+          quantity: 1000,
+          itemNumber: "00000001",
+        },
+      });
+      console.log(
+        "Document exists, updating document! Document data:",
+        docSnap.data()
+      );
+    } else {
+      await setDoc(doc(usersRef, userId), {
+        popcorn: {
+          quantity: 1000,
+          itemNumber: "00000001",
+        },
+      });
+      console.log("Document doesn't exist adding new doc!!");
+    }
   }
 
   async function getAllData() {
-    const querySnapshot = await getDocs(collection(db, "cities"));
+    const querySnapshot = await getDocs(collection(db, "users"));
     querySnapshot.forEach((doc) => {
       console.log(`${doc.id} => ${doc.data().name}`);
     });
   }
 
   async function getSelectData() {
-    const docRef = doc(db, "cities", "SF");
+    const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -72,14 +60,14 @@ export default function TestData({ db }) {
   }
 
   async function deleteData() {
-    const querySnapshot = await getDocs(collection(db, "cities"));
+    const querySnapshot = await getDocs(collection(db, "users"));
     const delArr = [];
     querySnapshot.forEach((doc) => {
       delArr.push(doc.id);
     });
     console.log(delArr);
     for (let i = 0; i < delArr.length; i++) {
-      await deleteDoc(doc(db, "cities", delArr[i]));
+      await deleteDoc(doc(db, "users", delArr[i]));
     }
   }
 

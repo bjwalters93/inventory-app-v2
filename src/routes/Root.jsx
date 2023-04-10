@@ -5,8 +5,10 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { useState } from "react";
 
 export default function Root() {
+  const [userId, setUserId] = useState(null);
   const auth = getAuth();
 
   onAuthStateChanged(auth, (user) => {
@@ -14,8 +16,8 @@ export default function Root() {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid;
-      console.log("user is signed in", "userId:", uid);
-      console.log("user:", user);
+      setUserId(uid);
+      console.log("user is signed in", "userId:", userId);
       // ...
     } else {
       console.log("user not signed in");
@@ -80,7 +82,7 @@ export default function Root() {
           </Button>
         </Paper>
       </Paper>
-      <Outlet />
+      <Outlet context={[userId, setUserId]} />
     </Box>
   );
 }
