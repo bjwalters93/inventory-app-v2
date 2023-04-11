@@ -10,11 +10,11 @@ import { useState } from "react";
 export default function Root() {
   const [userId, setUserId] = useState(null);
   const auth = getAuth();
+  console.log("auth:", auth.currentUser);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid;
       setUserId(uid);
       console.log("user is signed in", "userId:", userId);
@@ -29,7 +29,7 @@ export default function Root() {
   function userSignOut() {
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
+        setUserId(null);
         console.log("Sign-out successful");
       })
       .catch((error) => {
@@ -37,6 +37,7 @@ export default function Root() {
         console.log("Sign-out error");
       });
   }
+
   return (
     <Box>
       <Paper elevation={0} square className="header_container">
@@ -49,7 +50,7 @@ export default function Root() {
           style={{ display: "flex", alignItems: "baseline" }}
         >
           <NavLink
-            to="."
+            to="home"
             className={({ isActive }) =>
               isActive ? "about_active" : "about_default"
             }
@@ -65,7 +66,7 @@ export default function Root() {
             Sign up
           </NavLink>
           <NavLink
-            to="about"
+            to="."
             className={({ isActive }) =>
               isActive ? "about_active" : "about_default"
             }

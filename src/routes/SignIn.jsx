@@ -5,6 +5,8 @@ import { Form } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { NavLink } from "react-router-dom";
 import Paper from "@mui/material/Paper";
+import { useOutletContext } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -29,8 +31,11 @@ export async function action({ request }) {
 }
 
 export default function SignIn() {
+  const [userId, setUserId] = useOutletContext();
+  console.log("userId in Sign in:", userId);
   return (
     <Paper elevation={0} className="sign_in_container">
+      {userId && <Navigate to="/home/user-page" />}
       <p className="logo_container">
         <span className="logo_barcode_form">III</span>
         <span className="logo_text_form">Inventory App v2</span>

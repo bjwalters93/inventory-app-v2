@@ -18,38 +18,10 @@ export default function TestData({ db }) {
     const usersRef = collection(db, userId);
 
     await setDoc(doc(usersRef, "snickers"), {
-      snickers: "snickers",
+      name: "snickers",
       quantity: 100,
     });
   }
-
-  //   const [userId, setUserId] = useOutletContext();
-  //   async function postData() {
-  //     const usersRef = collection(db, "users");
-  //     const docRef = doc(db, "users", userId);
-  //     const docSnap = await getDoc(docRef);
-
-  //     if (docSnap.exists()) {
-  //       await updateDoc(docRef, {
-  //         snickers: {
-  //           quantity: 1000,
-  //           itemNumber: "00000001",
-  //         },
-  //       });
-  //       console.log(
-  //         "Document exists, updating document! Document data:",
-  //         docSnap.data()
-  //       );
-  //     } else {
-  //       await setDoc(doc(usersRef, userId), {
-  //         popcorn: {
-  //           quantity: 1000,
-  //           itemNumber: "00000001",
-  //         },
-  //       });
-  //       console.log("Document doesn't exist adding new doc!!");
-  //     }
-  //   }
 
   async function getAllData() {
     const querySnapshot = await getDocs(collection(db, userId));
