@@ -4,10 +4,10 @@ import { Navigate } from "react-router-dom";
 
 export default function UserPage() {
   const [userId, setUserId] = useOutletContext();
-  return (
-    <div>
-      {!userId && <Navigate to="/home" />}
-      <h1>Welcome, User!</h1>;
-    </div>
-  );
+
+  if (!userId) {
+    return <Navigate to="/home" />;
+  } else {
+    return <h1>Welcome, User!</h1>;
+  }
 }

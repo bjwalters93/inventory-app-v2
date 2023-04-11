@@ -8,9 +8,8 @@ import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useState } from "react";
 
 export default function Root() {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState();
   const auth = getAuth();
-  console.log("auth:", auth.currentUser);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -55,15 +54,7 @@ export default function Root() {
               isActive ? "about_active" : "about_default"
             }
           >
-            Home
-          </NavLink>
-          <NavLink
-            to="sign-up"
-            className={({ isActive }) =>
-              isActive ? "about_active" : "about_default"
-            }
-          >
-            Sign up
+            {userId ? "Home" : "Sign in"}
           </NavLink>
           <NavLink
             to="."
@@ -73,14 +64,24 @@ export default function Root() {
           >
             About
           </NavLink>
-          <Button
-            variant="text"
-            size="small"
-            onClick={userSignOut}
-            sx={{ fontWeight: "bold" }}
+          <NavLink
+            to="sign-up"
+            className={({ isActive }) =>
+              isActive ? "about_active" : "about_default"
+            }
           >
-            Sign out
-          </Button>
+            Sign up
+          </NavLink>
+          {userId && (
+            <Button
+              variant="text"
+              size="small"
+              onClick={userSignOut}
+              sx={{ fontWeight: "bold" }}
+            >
+              Sign out
+            </Button>
+          )}
         </Paper>
       </Paper>
       <Outlet context={[userId, setUserId]} />

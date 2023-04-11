@@ -59,7 +59,6 @@ const router = createBrowserRouter(
         <Route index element={<SignIn />} action={signInAction} />
         <Route path="user-page" element={<UserPage />} />
       </Route>
-      <Route path=":uid" element={<h1>If user is logged in element</h1>} />
       <Route path="sign-up" element={<SignUp />} action={signUpAction} />
       <Route path="test-data" element={<TestData db={db} />} />
     </Route>

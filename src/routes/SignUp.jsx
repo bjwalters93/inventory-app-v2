@@ -17,7 +17,7 @@ export async function action({ request }) {
       password
     );
     const user = userCredential.user;
-    return user ? redirect(`/:${user.uid}`) : null;
+    return user ? redirect(`/home/user-page`) : null;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;

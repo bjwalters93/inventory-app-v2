@@ -32,68 +32,70 @@ export async function action({ request }) {
 
 export default function SignIn() {
   const [userId, setUserId] = useOutletContext();
-  console.log("userId in Sign in:", userId);
-  return (
-    <Paper elevation={0} className="sign_in_container">
-      {userId && <Navigate to="/home/user-page" />}
-      <p className="logo_container">
-        <span className="logo_barcode_form">III</span>
-        <span className="logo_text_form">Inventory App v2</span>
-      </p>
+  if (userId) {
+    return <Navigate to="/home/user-page" />;
+  } else {
+    return (
+      <Paper elevation={0} className="sign_in_container">
+        <p className="logo_container">
+          <span className="logo_barcode_form">III</span>
+          <span className="logo_text_form">Inventory App v2</span>
+        </p>
 
-      <h2 style={{ margin: "0px 0 10px 0" }}>Sign in</h2>
-      <Paper
-        elevation={0}
-        sx={{
-          width: "100%",
-        }}
-      >
-        <Form method="post">
-          <Paper elevation={0} className="inputs_flex_container">
-            <TextField
-              sx={{
-                marginBottom: "30px",
-              }}
-              name="email"
-              label="email"
-              variant="outlined"
-              color="primary"
-              type="email"
-            />
-            <TextField
-              sx={{
-                marginBottom: "30px",
-              }}
-              name="password"
-              label="password"
-              variant="outlined"
-              color="primary"
-              type="password"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              size="large"
-            >
-              Sign in
-            </Button>
-          </Paper>
-        </Form>
-      </Paper>
-      <p style={{ textAlign: "center" }}>
-        Need an account?{" "}
-        <NavLink
-          to="sign-up"
-          style={{
-            fontWeight: "bold",
-            textDecoration: "none",
-            color: "#ed6c02",
+        <h2 style={{ margin: "0px 0 10px 0" }}>Sign in</h2>
+        <Paper
+          elevation={0}
+          sx={{
+            width: "100%",
           }}
         >
-          Sign up
-        </NavLink>
-      </p>
-    </Paper>
-  );
+          <Form method="post">
+            <Paper elevation={0} className="inputs_flex_container">
+              <TextField
+                sx={{
+                  marginBottom: "30px",
+                }}
+                name="email"
+                label="email"
+                variant="outlined"
+                color="primary"
+                type="email"
+              />
+              <TextField
+                sx={{
+                  marginBottom: "30px",
+                }}
+                name="password"
+                label="password"
+                variant="outlined"
+                color="primary"
+                type="password"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                size="large"
+              >
+                Sign in
+              </Button>
+            </Paper>
+          </Form>
+        </Paper>
+        <p style={{ textAlign: "center" }}>
+          Need an account?{" "}
+          <NavLink
+            to="../sign-up"
+            style={{
+              fontWeight: "bold",
+              textDecoration: "none",
+              color: "#ed6c02",
+            }}
+          >
+            Sign up
+          </NavLink>
+        </p>
+      </Paper>
+    );
+  }
 }
