@@ -28,7 +28,7 @@ import SignIn, { action as signInAction } from "./routes/SignIn";
 import SignUp, { action as signUpAction } from "./routes/SignUp";
 import Root from "./routes/Root";
 import Home from "./routes/Home";
-import UserPage from "./routes/UserPage";
+import UserPage, { action as userPageAction } from "./routes/UserPage";
 import About from "./routes/About";
 import {
   createBrowserRouter,
@@ -48,8 +48,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -57,7 +57,11 @@ const router = createBrowserRouter(
       <Route index element={<About />} />
       <Route path="home" element={<Home />}>
         <Route index element={<SignIn />} action={signInAction} />
-        <Route path="user-page" element={<UserPage />} />
+        <Route
+          path="user-page"
+          element={<UserPage />}
+          action={userPageAction}
+        />
       </Route>
       <Route path="sign-up" element={<SignUp />} action={signUpAction} />
       <Route path="test-data" element={<TestData db={db} />} />

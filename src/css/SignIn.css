@@ -25,7 +25,7 @@
   color: #1976d2;
 }
 
-.inputs_flex_container {
+.inputs_flex_signIn {
   display: flex;
   flex-direction: column;
   width: 100%;

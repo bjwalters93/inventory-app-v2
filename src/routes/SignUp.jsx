@@ -1,12 +1,12 @@
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Form, redirect } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import Box from "@mui/material/Box";
+import { auth } from "../main";
 
 export async function action({ request }) {
   const formData = await request.formData();
-  const auth = getAuth();
   const email = formData.get("email");
   const password = formData.get("password");
 
@@ -24,22 +24,6 @@ export async function action({ request }) {
     console.log("error code:", errorCode, "error message:", errorMessage);
     return null;
   }
-
-  /*
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("Sign-up component - user:", user);
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("error code:", errorCode, "error message:", errorMessage);
-    });
-    return null;
-    redirect(`/:${user.uid}`);
-    */
 }
 
 export default function SignUp() {

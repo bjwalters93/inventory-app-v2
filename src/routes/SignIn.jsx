@@ -2,23 +2,21 @@ import "../css/SignIn.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Form } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { NavLink } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { useOutletContext } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { auth } from "../main";
 
 export async function action({ request }) {
   const formData = await request.formData();
-  const auth = getAuth();
   const email = formData.get("email");
   const password = formData.get("password");
-  console.log(email, password);
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log(user);
       console.log("Sign in successful");
       // ...
     })
@@ -50,7 +48,7 @@ export default function SignIn() {
           }}
         >
           <Form method="post">
-            <Paper elevation={0} className="inputs_flex_container">
+            <Paper elevation={0} className="inputs_flex_signIn">
               <TextField
                 sx={{
                   marginBottom: "30px",

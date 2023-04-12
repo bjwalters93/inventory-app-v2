@@ -4,12 +4,13 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useState } from "react";
+import { auth } from "../main";
 
 export default function Root() {
   const [userId, setUserId] = useState();
-  const auth = getAuth();
+  console.log("userId state:", userId);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {

@@ -1,18 +1,19 @@
 import {
   collection,
   setDoc,
-  getDocs,
   doc,
+  getDocs,
   deleteDoc,
   getDoc,
   updateDoc,
 } from "firebase/firestore";
 import { useOutletContext } from "react-router-dom";
+import { db } from "../main";
 
 // -----------------NOTES--------
 // to access a data property ---> .data().property
 
-export default function TestData({ db }) {
+export default function TestData() {
   const [userId, setUserId] = useOutletContext();
   async function postData() {
     const usersRef = collection(db, userId);
