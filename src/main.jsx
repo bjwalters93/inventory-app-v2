@@ -30,7 +30,7 @@ import Root from "./routes/Root";
 import Home from "./routes/Home";
 import UserPage, {
   action as userPageAction,
-  //   loader as userPageLoader,
+  loader as userPageLoader,
 } from "./routes/UserPage";
 import About from "./routes/About";
 import {
@@ -63,7 +63,7 @@ const router = createBrowserRouter(
         <Route
           path="user-page"
           element={<UserPage />}
-          //   loader={userPageLoader}
+          loader={userPageLoader}
           action={userPageAction}
         />
       </Route>

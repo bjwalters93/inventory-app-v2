@@ -11,7 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Root() {
   const [logInState, setLogInState] = useState(null);
-  console.log("logInState state:", logInState);
+  //   console.log("logInState state:", logInState);
 
   useEffect(() => {
     //Runs only on the first render
@@ -20,12 +20,12 @@ export default function Root() {
         // User is signed in
         const uid = user.uid;
         setLogInState("signedIn");
-        console.log("user is signed in", "logInState:", logInState);
+        // console.log("user is signed in", "logInState:", logInState);
         // ...
       } else {
         // User is signed out
         setLogInState("signedOut");
-        console.log("user not signed in");
+        // console.log("user not signed in");
       }
     });
   }, []);

@@ -8,21 +8,22 @@ import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
 import DataDisplay from "./UserPageComponents/DataDisplay";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
+import { onAuthStateChanged } from "firebase/auth";
 
-// export async function loader() {
-//   const user = auth.currentUser;
-//   if (user !== null) {
-//     const uid = user.uid;
-//     console.log(uid);
+export async function loader() {
+  const user = auth.currentUser;
+  if (user !== null) {
+    const uid = user.uid;
+    console.log(uid);
 
-//     const querySnapshot = await getDocs(collection(db, uid));
-//     querySnapshot.forEach((doc) => {
-//       // doc.data() is never undefined for query doc snapshots
-//       console.log(doc.id, " => ", doc.data());
-//     });
-//   } else console.log("Error. Data was NOT loaded!");
-//   return null;
-// }
+    const querySnapshot = await getDocs(collection(db, uid));
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+    });
+  } else if (user === null) console.log("Error. Data was NOT loaded!");
+  return null;
+}
 
 export async function action({ request }) {
   const formData = await request.formData();
