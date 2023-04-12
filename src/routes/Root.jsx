@@ -14,15 +14,14 @@ export default function Root() {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // User is signed in, see docs for a list of available properties
+      // User is signed in
       const uid = user.uid;
       setUserId(uid);
       console.log("user is signed in", "userId:", userId);
       // ...
     } else {
-      console.log("user not signed in");
       // User is signed out
-      // ...
+      console.log("user not signed in");
     }
   });
 
