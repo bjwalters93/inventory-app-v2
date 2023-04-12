@@ -23,7 +23,7 @@ import { StyledEngineProvider } from "@mui/material/styles";
 // -----------------------------
 // ----- REACT ROUTER IMPORTS -----
 // -----------------------------
-import TestData from "./routes/TestData";
+import TestData from "./TestData";
 import SignIn, { action as signInAction } from "./routes/SignIn";
 import SignUp, { action as signUpAction } from "./routes/SignUp";
 import Root from "./routes/Root";

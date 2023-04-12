@@ -8,7 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useOutletContext } from "react-router-dom";
-import { db } from "../main";
+import { db } from "./main";
 
 // -----------------NOTES--------
 // to access a data property ---> .data().property
