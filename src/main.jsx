@@ -28,7 +28,10 @@ import SignIn, { action as signInAction } from "./routes/SignIn";
 import SignUp, { action as signUpAction } from "./routes/SignUp";
 import Root from "./routes/Root";
 import Home from "./routes/Home";
-import UserPage, { action as userPageAction } from "./routes/UserPage";
+import UserPage, {
+  action as userPageAction,
+  //   loader as userPageLoader,
+} from "./routes/UserPage";
 import About from "./routes/About";
 import {
   createBrowserRouter,
@@ -60,6 +63,7 @@ const router = createBrowserRouter(
         <Route
           path="user-page"
           element={<UserPage />}
+          //   loader={userPageLoader}
           action={userPageAction}
         />
       </Route>

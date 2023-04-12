@@ -5,30 +5,35 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../main";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Root() {
-  const [userId, setUserId] = useState();
-  console.log("userId state:", userId);
+  const [logInState, setLogInState] = useState(null);
+  console.log("logInState state:", logInState);
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in
-      const uid = user.uid;
-      setUserId(uid);
-      console.log("user is signed in", "userId:", userId);
-      // ...
-    } else {
-      // User is signed out
-      console.log("user not signed in");
-    }
-  });
+  useEffect(() => {
+    //Runs only on the first render
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        const uid = user.uid;
+        setLogInState("signedIn");
+        console.log("user is signed in", "logInState:", logInState);
+        // ...
+      } else {
+        // User is signed out
+        setLogInState("signedOut");
+        console.log("user not signed in");
+      }
+    });
+  }, []);
 
   function userSignOut() {
     signOut(auth)
       .then(() => {
-        setUserId(null);
+        setLogInState("signedOut");
         console.log("Sign-out successful");
       })
       .catch((error) => {
@@ -44,47 +49,55 @@ export default function Root() {
           <span className="logo_barcode_header">III</span>
           <span className="logo_text_header">Inventory App v2</span>
         </p>
-        <Paper
-          elevation={0}
-          style={{ display: "flex", alignItems: "baseline" }}
-        >
-          <NavLink
-            to="home"
-            className={({ isActive }) =>
-              isActive ? "about_active" : "about_default"
-            }
+        {logInState === null ? (
+          <Box sx={{ display: "flex", marginRight: "30px" }}>
+            <CircularProgress thickness={3} />
+          </Box>
+        ) : (
+          <Paper
+            elevation={0}
+            style={{ display: "flex", alignItems: "baseline" }}
           >
-            {userId ? "Home" : "Sign in"}
-          </NavLink>
-          <NavLink
-            to="."
-            className={({ isActive }) =>
-              isActive ? "about_active" : "about_default"
-            }
-          >
-            About
-          </NavLink>
-          <NavLink
-            to="sign-up"
-            className={({ isActive }) =>
-              isActive ? "about_active" : "about_default"
-            }
-          >
-            Sign up
-          </NavLink>
-          {userId && (
-            <Button
-              variant="text"
-              size="small"
-              onClick={userSignOut}
-              sx={{ fontWeight: "bold" }}
+            <NavLink
+              to="home"
+              className={({ isActive }) =>
+                isActive ? "about_active" : "about_default"
+              }
             >
-              Sign out
-            </Button>
-          )}
-        </Paper>
+              {logInState === "signedOut" || logInState === null
+                ? "Sign in"
+                : "Home"}
+            </NavLink>
+            <NavLink
+              to="."
+              className={({ isActive }) =>
+                isActive ? "about_active" : "about_default"
+              }
+            >
+              About
+            </NavLink>
+            <NavLink
+              to="sign-up"
+              className={({ isActive }) =>
+                isActive ? "about_active" : "about_default"
+              }
+            >
+              Sign up
+            </NavLink>
+            {logInState === "signedIn" && (
+              <Button
+                variant="text"
+                size="small"
+                onClick={userSignOut}
+                sx={{ fontWeight: "bold" }}
+              >
+                Sign out
+              </Button>
+            )}
+          </Paper>
+        )}
       </Paper>
-      <Outlet context={[userId, setUserId]} />
+      <Outlet context={[logInState, setLogInState]} />
     </Box>
   );
 }

@@ -8,6 +8,8 @@ import Paper from "@mui/material/Paper";
 import { useOutletContext } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { auth } from "../main";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -29,10 +31,23 @@ export async function action({ request }) {
 }
 
 export default function SignIn() {
-  const [userId, setUserId] = useOutletContext();
-  if (userId) {
+  const [logInState, setLogInState] = useOutletContext();
+  if (logInState === null) {
+    <Box
+      sx={{
+        display: "flex",
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        marginTop: "-100px",
+        marginLeft: "-100px",
+      }}
+    >
+      <CircularProgress size={200} thickness={1.5} />
+    </Box>;
+  } else if (logInState === "signedIn") {
     return <Navigate to="/home/user-page" />;
-  } else {
+  } else if (logInState === "signedOut") {
     return (
       <Paper elevation={0} className="sign_in_container">
         <p className="logo_container">

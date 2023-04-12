@@ -3,8 +3,26 @@ import { useOutletContext } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { db } from "../main";
 import { auth } from "../main";
-import { collection, setDoc, doc } from "firebase/firestore";
+import { collection, setDoc, doc, getDocs } from "firebase/firestore";
 import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
+import DataDisplay from "./UserPageComponents/DataDisplay";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+
+// export async function loader() {
+//   const user = auth.currentUser;
+//   if (user !== null) {
+//     const uid = user.uid;
+//     console.log(uid);
+
+//     const querySnapshot = await getDocs(collection(db, uid));
+//     querySnapshot.forEach((doc) => {
+//       // doc.data() is never undefined for query doc snapshots
+//       console.log(doc.id, " => ", doc.data());
+//     });
+//   } else console.log("Error. Data was NOT loaded!");
+//   return null;
+// }
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -27,90 +45,43 @@ export async function action({ request }) {
 }
 
 export default function UserPage() {
-  const [userId, setUserId] = useOutletContext();
-  if (!userId) {
+  const [logInState, setLogInState] = useOutletContext();
+  if (logInState === null) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          marginTop: "-50px",
+          marginLeft: "-50px",
+        }}
+      >
+        <CircularProgress size={100} thickness={1.5} />
+      </Box>
+    );
+  } else if (logInState === "signedOut") {
     return <Navigate to="/home" />;
-  } else {
-    return <AddInventoryItem />;
+  } else if (logInState === "signedIn") {
+    return (
+      <Box>
+        <AddInventoryItem />
+        <DataDisplay />
+      </Box>
+    );
   }
 }
-
-//   if (!userId) {
+// export default function UserPage() {
+//   const [logInState, setLogInState] = useOutletContext();
+//   if (!logInState) {
 //     return <Navigate to="/home" />;
 //   } else {
 //     return (
-//       <Paper elevation={0} className="addItem_container">
-//         <Form method="post">
-//           <Paper elevation={0} className="inputs_flex_addItem">
-//             <TextField
-//               sx={{
-//                 marginBottom: "30px",
-//               }}
-//               name="category"
-//               label="category"
-//               variant="outlined"
-//               color="primary"
-//               type="text"
-//             />
-//             <TextField
-//               sx={{
-//                 marginBottom: "30px",
-//               }}
-//               name="name"
-//               label="name"
-//               variant="outlined"
-//               color="primary"
-//               type="text"
-//             />
-//             <TextField
-//               sx={{
-//                 marginBottom: "30px",
-//               }}
-//               name="itemNumber"
-//               label="Item number"
-//               variant="outlined"
-//               color="primary"
-//               type="text"
-//             />
-//             <TextField
-//               sx={{
-//                 marginBottom: "30px",
-//               }}
-//               name="quantity"
-//               label="quantity"
-//               variant="outlined"
-//               color="primary"
-//               type="text"
-//             />
-//             <Button
-//               variant="contained"
-//               color="primary"
-//               type="submit"
-//               size="large"
-//             >
-//               Submit
-//             </Button>
-//             <Button
-//               variant="contained"
-//               color="primary"
-//               type="reset"
-//               size="large"
-//             >
-//               Reset
-//             </Button>
-//           </Paper>
-//         </Form>
-//       </Paper>
+//       <Box>
+//         <AddInventoryItem />
+//         <DataDisplay />
+//       </Box>
 //     );
-//   }
-// }
-
-// export default function UserPage() {
-//   const [userId, setUserId] = useOutletContext();
-
-//   if (!userId) {
-//     return <Navigate to="/home" />;
-//   } else {
-//     return <AddInventoryItem />;
 //   }
 // }

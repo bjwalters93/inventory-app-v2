@@ -14,9 +14,9 @@ import { db } from "../main";
 // to access a data property ---> .data().property
 
 export default function TestData() {
-  const [userId, setUserId] = useOutletContext();
+  const [logInState, setLogInState] = useOutletContext();
   async function postData() {
-    const usersRef = collection(db, userId);
+    const usersRef = collection(db, logInState);
 
     await setDoc(doc(usersRef, "snickers"), {
       name: "snickers",
@@ -25,14 +25,14 @@ export default function TestData() {
   }
 
   async function getAllData() {
-    const querySnapshot = await getDocs(collection(db, userId));
+    const querySnapshot = await getDocs(collection(db, logInState));
     querySnapshot.forEach((doc) => {
       console.log(`${doc.id} => ${doc.data().name}`);
     });
   }
 
   async function getSelectData() {
-    const docRef = doc(db, userId, "snickers");
+    const docRef = doc(db, logInState, "snickers");
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -43,14 +43,14 @@ export default function TestData() {
   }
 
   async function deleteData() {
-    const querySnapshot = await getDocs(collection(db, userId));
+    const querySnapshot = await getDocs(collection(db, logInState));
     const delArr = [];
     querySnapshot.forEach((doc) => {
       delArr.push(doc.id);
     });
     console.log(delArr);
     for (let i = 0; i < delArr.length; i++) {
-      await deleteDoc(doc(db, userId, delArr[i]));
+      await deleteDoc(doc(db, logInState, delArr[i]));
     }
   }
 
