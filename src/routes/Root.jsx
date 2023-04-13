@@ -20,12 +20,12 @@ export default function Root() {
         // User is signed in
         const uid = user.uid;
         setLogInState("signedIn");
-        // console.log("user is signed in", "logInState:", logInState);
+        console.log("onAuthStateChanged fired, user signed in");
         // ...
       } else {
         // User is signed out
         setLogInState("signedOut");
-        // console.log("user not signed in");
+        console.log("onAuthStateChanged fired, user signed out");
       }
     });
   }, []);
