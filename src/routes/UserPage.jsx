@@ -22,12 +22,18 @@ export async function loader() {
         });
         resolve(data);
       } else {
-        console.log("Error. Data was NOT loaded!");
+        reject("User not signed in, unable to load user data!");
       }
     });
   });
-  let userData = await myPromise;
-  console.log(userData);
+  let userData = myPromise.then(
+    function (value) {
+      return value;
+    },
+    function (error) {
+      throw new Error(error);
+    }
+  );
   return userData;
 }
 

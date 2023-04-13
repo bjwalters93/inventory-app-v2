@@ -23,6 +23,7 @@ import { StyledEngineProvider } from "@mui/material/styles";
 // -----------------------------
 // ----- REACT ROUTER IMPORTS -----
 // -----------------------------
+import ErrorPage from "./routes/ErrorPage";
 import TestData from "./TestData";
 import SignIn, { action as signInAction } from "./routes/SignIn";
 import SignUp, { action as signUpAction } from "./routes/SignUp";
@@ -56,7 +57,7 @@ export const db = getFirestore(app);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />}>
+    <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route index element={<About />} />
       <Route path="home" element={<Home />}>
         <Route index element={<SignIn />} action={signInAction} />
