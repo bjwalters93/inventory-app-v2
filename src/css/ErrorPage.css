@@ -2,20 +2,56 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .error-title {
   color: red;
   font-size: 50px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .error-text {
   font-size: 30px;
   margin: 0;
+  font-weight: bold;
 }
 
 .error-message {
+  font-weight: bold;
   font-size: 20px;
   margin: 0;
+}
+
+.logo_container_error {
+  margin: 30px 0 0 0;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.logo_barcode_error {
+  font-family: "Libre Barcode 39", cursive;
+  color: #ed6c02;
+}
+
+.logo_text_error {
+  font-family: "Righteous", cursive;
+  margin-left: 5px;
+  color: #1976d2;
+}
+
+.error-link {
+  font-size: 30px;
+  font-weight: bold;
+  color: #1976d2;
+  text-decoration: none;
+  border: 5px solid #1976d2;
+  padding: 5px 20px;
+  margin: 20px 0 0 0;
+  border-radius: 10px;
+}
+
+.error-link:hover {
+  background-color: #ed6c02;
+  color: white;
 }

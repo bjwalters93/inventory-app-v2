@@ -15,19 +15,15 @@ export async function action({ request }) {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("Sign in successful");
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log("error code:", errorCode, "error message:", errorMessage);
-    });
-  return null;
+  let userInfo = signInWithEmailAndPassword(auth, email, password).then(
+    function (userCredential) {
+      return userCredential;
+    },
+    function (error) {
+      throw new Error(error);
+    }
+  );
+  return userInfo;
 }
 
 export default function SignIn() {

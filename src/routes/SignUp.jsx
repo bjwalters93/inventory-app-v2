@@ -19,10 +19,7 @@ export async function action({ request }) {
     const user = userCredential.user;
     return user ? redirect(`/home/user-page`) : null;
   } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log("error code:", errorCode, "error message:", errorMessage);
-    return null;
+    throw new Error(error);
   }
 }
 

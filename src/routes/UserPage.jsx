@@ -14,13 +14,17 @@ export async function loader() {
   let myPromise = new Promise(function (resolve, reject) {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const data = [];
-        const userId = user.uid;
-        const querySnapshot = await getDocs(collection(db, userId));
-        querySnapshot.forEach((doc) => {
-          data.push(doc.data());
-        });
-        resolve(data);
+        try {
+          const data = [];
+          const userId = user.uid;
+          const querySnapshot = await getDocs(collection(db, userId));
+          querySnapshot.forEach((doc) => {
+            data.push(doc.data());
+          });
+          resolve(data);
+        } catch (error) {
+          reject(error);
+        }
       } else {
         reject("User not signed in, unable to load user data!");
       }
@@ -53,7 +57,7 @@ export async function action({ request }) {
       itemNumber: formObject.itemNumber,
       quantity: formObject.quantity,
     });
-  } else console.log("Error. Data was NOT posted!");
+  } else throw new Error("Data was not posted, sorry.");
   return formObject;
 }
 
