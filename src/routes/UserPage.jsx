@@ -54,7 +54,7 @@ export async function action({ request }) {
     await setDoc(doc(usersRef, formObject.name), {
       category: formObject.category,
       name: formObject.name,
-      itemNumber: formObject.itemNumber,
+      itemCode: formObject.itemCode,
       quantity: formObject.quantity,
     });
   } else throw new Error("Data was not posted, sorry.");

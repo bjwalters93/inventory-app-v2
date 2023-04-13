@@ -9,7 +9,9 @@ import { Form } from "react-router-dom";
 export default function AddInventoryItem() {
   return (
     <Paper square elevation={0} className="addItem_container">
-      <h2 style={{ margin: "0 0 10px 0" }}>Add Inventory Item</h2>
+      <h2 style={{ margin: "0 0 10px 0", fontWeight: "normal" }}>
+        Add Inventory Item
+      </h2>
       <Form method="post">
         <Paper elevation={0} className="inputs_flex_addItem">
           <TextField
@@ -20,6 +22,14 @@ export default function AddInventoryItem() {
             color="primary"
             type="text"
             size="small"
+            inputProps={{
+              autoComplete: "off",
+              maxLength: "20",
+              pattern: "^[A-Z][a-zA-Z]+",
+              title:
+                "Only letters are allowed. First letter must be capitalized.",
+            }}
+            required
           />
           <TextField
             sx={{ margin: " 0 10px" }}
@@ -29,15 +39,30 @@ export default function AddInventoryItem() {
             color="primary"
             type="text"
             size="small"
+            inputProps={{
+              autoComplete: "off",
+              maxLength: "20",
+              pattern: "^[A-Z][a-zA-Z]+",
+              title:
+                "Only letters are allowed. First letter must be capitalized.",
+            }}
+            required
           />
           <TextField
             sx={{ margin: "0 10px" }}
-            name="itemNumber"
+            name="itemCode"
             label="Item number"
             variant="outlined"
             color="primary"
             type="text"
             size="small"
+            inputProps={{
+              autoComplete: "off",
+              maxLength: "10",
+              pattern: "[A-Z0-9]{10,}",
+              title: "Only capital letters and numbers allowed.",
+            }}
+            required
           />
           <TextField
             sx={{ margin: " 0 10px" }}
@@ -45,8 +70,14 @@ export default function AddInventoryItem() {
             label="quantity"
             variant="outlined"
             color="primary"
-            type="text"
+            type="number"
             size="small"
+            inputProps={{
+              autoComplete: "off",
+              min: "1",
+              max: "10000",
+            }}
+            required
           />
           <Button
             sx={{ margin: "0 10px" }}
