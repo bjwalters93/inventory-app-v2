@@ -18,7 +18,7 @@ export default function Root() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
-        const uid = user.uid;
+        // const uid = user.uid;
         setLogInState("signedIn");
         console.log("onAuthStateChanged fired, user signed in");
         // ...
