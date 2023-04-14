@@ -1,4 +1,4 @@
-import "../../css/UserPageComponents/AddInventoryItem.css";
+import "../../css/UserPageComponents/DataDisplay.css";
 import { useLoaderData } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
@@ -22,7 +22,6 @@ export default function DataDisplay() {
     });
   }
   console.log(rows);
-  // { id: 3, col1: "MUI", col2: "is Amazing" },
 
   const columns = [
     { field: "col1", headerName: "Category", width: 150 },
@@ -31,31 +30,8 @@ export default function DataDisplay() {
     { field: "col4", headerName: "Quantity", width: 150 },
   ];
   return (
-    <Paper
-      square
-      elevation={0}
-      sx={{
-        height: "calc(100vh - 229px)",
-        width: "100%",
-        marginTop: "229px",
-        position: "absolute",
-        zIndex: "-2",
-      }}
-    >
+    <Paper square elevation={0} className="table-container">
       <DataGrid rows={rows} columns={columns} />
     </Paper>
   );
 }
-
-// export default function DataDisplay() {
-//   const inventoryList = useLoaderData();
-//   const displayInventoryList = inventoryList.map((item) => {
-//     return (
-//       <li key={item.name}>
-//         {item.category}/{item.name}/{item.itemCode}/{item.quantity}
-//       </li>
-//     );
-//   });
-//   console.log("inventory list:", inventoryList);
-//   return <ul>{displayInventoryList}</ul>;
-// }

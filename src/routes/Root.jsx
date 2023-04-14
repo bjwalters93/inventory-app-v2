@@ -44,7 +44,7 @@ export default function Root() {
 
   return (
     <Box>
-      <Paper elevation={0} square className="header_container">
+      <Paper elevation={3} square className="header_container">
         <p className="logo_container_header">
           <span className="logo_barcode_header">III</span>
           <span className="logo_text_header">Inventory App v2</span>
@@ -56,7 +56,11 @@ export default function Root() {
         ) : (
           <Paper
             elevation={0}
-            style={{ display: "flex", alignItems: "baseline" }}
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              backgroundColor: "rgb(23, 23, 23)",
+            }}
           >
             <NavLink
               to="home"
@@ -89,7 +93,7 @@ export default function Root() {
                 variant="text"
                 size="small"
                 onClick={userSignOut}
-                sx={{ fontWeight: "bold" }}
+                className="log-out-btn"
               >
                 Sign out
               </Button>

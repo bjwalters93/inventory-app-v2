@@ -1,18 +1,56 @@
 .addItem_container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.2);
-  padding: 10px 0 20px 0;
-  position: fixed;
-  top: 93px;
-  width: 100%;
-  z-index: -1;
+  width: 40%;
+  margin-top: 40px;
 }
 
 .inputs_flex_addItem {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  /* border: 1px solid red; */
+  width: 100%;
+}
+
+.input-tag {
+  margin: 0 0 10px 0;
+  font-weight: 500;
+  /* background-color: rgb(255, 225, 0); */
+  padding: 2px 4px;
+  display: inline;
+  align-self: flex-start;
+  border-bottom: 1px solid black;
+}
+
+.submit-btn {
+  margin: 0 0 20px 0;
+  background-color: #086317;
+  transition: transform 0.1s;
+  transform: scale(1);
+}
+
+.submit-btn:hover {
+  margin: 0 0 20px 0;
+  background-color: #0a9a22;
+  transform: scale(1.03);
+}
+
+.reset-btn {
+  background-color: #9a0101;
+  color: white;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+  transition: transform 0.1s;
+  transform: scale(1);
+}
+
+.reset-btn:hover {
+  background-color: #c90000;
+  color: white;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+  transform: scale(1.03);
 }

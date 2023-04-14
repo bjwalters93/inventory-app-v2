@@ -6,6 +6,7 @@ import { auth } from "../main";
 import { collection, setDoc, doc, getDocs } from "firebase/firestore";
 import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
 import DataDisplay from "./UserPageComponents/DataDisplay";
+import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { onAuthStateChanged } from "firebase/auth";
@@ -82,10 +83,20 @@ export default function UserPage() {
     return <Navigate to="/home" />;
   } else if (logInState === "signedIn") {
     return (
-      <Box>
+      <Paper
+        square
+        elevation={3}
+        sx={{
+          display: "flex",
+          marginTop: "77.25px",
+          width: "100%",
+          //   border: "1px solid green",
+          height: "calc(100vh - 77.25px)",
+        }}
+      >
         <AddInventoryItem />
         <DataDisplay />
-      </Box>
+      </Paper>
     );
   }
 }

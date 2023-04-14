@@ -3,7 +3,77 @@
   padding: 20px;
   top: 0;
   left: 0;
-  box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.2);
+  margin: 0 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  z-index: 0;
+  background-color: rgb(23, 23, 23);
+}
+
+.logo_container_header {
+  margin: 0 0 0 20px;
+  font-size: 20px;
+}
+
+.logo_barcode_header {
+  font-family: "Libre Barcode 39", cursive;
+  color: #c90000;
+  letter-spacing: 5px;
+  font-style: italic;
+}
+
+.logo_text_header {
+  font-family: "Righteous", cursive;
+  margin-left: 10px;
+  color: white;
+  font-style: italic;
+  letter-spacing: 5px;
+}
+
+.about_active {
+  padding: 2px 10px;
+  color: white;
+  text-decoration: none;
+  border-bottom: 1px solid #7fc900;
+  margin: 0 20px 0 20px;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.about_default:hover {
+  color: #7fc900;
+}
+
+.about_default {
+  padding: 2px 10px;
+  font-size: 20px;
+  font-weight: 400;
+  text-decoration: none;
+  margin: 0 20px 0 20px;
+  color: white;
+}
+
+.log-out-btn {
+  font-weight: bold;
+  background-color: black;
+  color: white;
+  border: 1px solid #c90000;
+  padding: 5px 10px;
+  margin-left: 40px;
+}
+
+.log-out-btn:hover {
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+}
+/* .header_container {
+  width: 100%;
+  padding: 20px;
+  top: 0;
+  left: 0;
   margin: 0 0 0 0;
   display: flex;
   align-items: center;
@@ -43,4 +113,4 @@
   text-decoration: none;
   margin: 0 20px 0 20px;
   color: #1976d2;
-}
+} */
