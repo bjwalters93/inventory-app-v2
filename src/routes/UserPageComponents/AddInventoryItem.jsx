@@ -25,7 +25,7 @@ export default function AddInventoryItem() {
             inputProps={{
               autoComplete: "off",
               maxLength: "20",
-              pattern: "^[A-Z][a-zA-Z]+",
+              pattern: "^[A-Z][a-z]*(?: [A-Z][a-z]*)*$",
               title:
                 "Only letters are allowed. First letter must be capitalized.",
             }}
@@ -42,7 +42,7 @@ export default function AddInventoryItem() {
             inputProps={{
               autoComplete: "off",
               maxLength: "20",
-              pattern: "^[A-Z][a-zA-Z]+",
+              pattern: "^[A-Z][a-z]*(?: [A-Z][a-z]*)*$",
               title:
                 "Only letters are allowed. First letter must be capitalized.",
             }}
@@ -59,7 +59,7 @@ export default function AddInventoryItem() {
             inputProps={{
               autoComplete: "off",
               maxLength: "10",
-              pattern: "[A-Z0-9]{10,}",
+              pattern: "^[A-Z0-9]{10,}",
               title: "Only capital letters and numbers allowed.",
             }}
             required

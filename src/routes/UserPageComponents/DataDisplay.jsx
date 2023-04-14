@@ -34,7 +34,13 @@ export default function DataDisplay() {
     <Paper
       square
       elevation={0}
-      style={{ height: 300, width: "100%", marginTop: "20px" }}
+      sx={{
+        height: "calc(100vh - 229px)",
+        width: "100%",
+        marginTop: "229px",
+        position: "absolute",
+        zIndex: "-2",
+      }}
     >
       <DataGrid rows={rows} columns={columns} />
     </Paper>
