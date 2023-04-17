@@ -10,6 +10,8 @@
   position: fixed;
   z-index: 0;
   background-color: rgb(23, 23, 23);
+  border-top: 2px solid white;
+  border-bottom: 2px solid white;
 }
 
 .logo_container_header {
@@ -57,7 +59,7 @@
 
 .log-out-btn {
   font-weight: bold;
-  background-color: black;
+  background-color: rgb(23, 23, 23);
   color: white;
   border: 1px solid #c90000;
   padding: 5px 10px;
@@ -65,9 +67,9 @@
 }
 
 .log-out-btn:hover {
-  border: 1px solid black;
+  border: 1px solid rgb(23, 23, 23);
   background-color: white;
-  color: black;
+  color: rgb(23, 23, 23);
 }
 /* .header_container {
   width: 100%;

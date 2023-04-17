@@ -4,33 +4,77 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Form } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import { withTheme } from "@emotion/react";
+import { buildAggregatedQuickFilterApplier } from "@mui/x-data-grid/hooks/features/filter/gridFilterUtils";
 
-// YOU CAN CHANGE THE PRIMARY COLOR ON THE THEME PALETTE TO CHANGE THE COLOR OF TEXTFIELDS
+// Reference for styling textfield
+// URL https://aguidehub.com/blog/2022-11-09-how-to-change-mui-textfield-border-color-on-hover-in-react-js/
+// const CssTextField = styled(TextField)({
+//   "& label.Mui-focused": {
+//     color: "green",
+//   },
+//   "& .MuiInput-underline:after": {
+//     borderBottomColor: "green",
+//   },
+//   "& .MuiOutlinedInput-root": {
+//     "& fieldset": {
+//       borderColor: "red",
+//     },
+//     "&:hover fieldset": {
+//       borderColor: "yellow",
+//     },
+//     "&.Mui-focused fieldset": {
+//       borderColor: "green",
+//     },
+//   },
+// });
+
+const CustomTextField = styled(TextField)(({ theme }) => ({
+  "& label.Mui-focused": {
+    color: "black",
+  },
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: "rgb(231, 231, 231)",
+    // borderRadius: "20px",
+    // color: "white",
+    "& fieldset": {
+      //   border: "none",
+      //   borderColor: "black",
+    },
+    // "&:hover fieldset": {
+    //   borderColor: "yellow",
+    // },
+    "&.Mui-focused fieldset": {
+      borderColor: "#0a9a22",
+    },
+  },
+}));
 
 export default function AddInventoryItem() {
   return (
     <Paper square elevation={0} className="addItem_container">
+      <h2
+        style={{
+          width: "100%",
+          margin: "0 0 10px 0",
+          fontWeight: "700",
+          fontSize: "20px",
+          textAlign: "center",
+          padding: "5px 10px",
+          color: "white",
+          borderBottom: "2px solid white",
+        }}
+      >
+        Add Inventory Item
+      </h2>
       <Form method="post" style={{ width: "40%" }}>
-        <h2
-          style={{
-            margin: "0 0 20px 0",
-            fontWeight: "700",
-            fontSize: "20px",
-            textAlign: "left",
-            backgroundColor: "black",
-            color: "white",
-            padding: "5px 10px",
-            borderRadius: "10px",
-          }}
-        >
-          Add Inventory Item
-        </h2>
         <Paper elevation={0} className="inputs_flex_addItem">
           <p className="input-tag">Category :</p>
-          <TextField
+          <CustomTextField
             sx={{ margin: "0 0 20px 0" }}
             name="category"
-            label="category"
+            placeholder="category"
             variant="outlined"
             color="primary"
             type="text"
@@ -45,10 +89,10 @@ export default function AddInventoryItem() {
             required
           />
           <p className="input-tag">Name :</p>
-          <TextField
+          <CustomTextField
             sx={{ margin: "0 0 20px 0" }}
             name="name"
-            label="name"
+            placeholder="name"
             variant="outlined"
             color="primary"
             type="text"
@@ -63,10 +107,10 @@ export default function AddInventoryItem() {
             required
           />
           <p className="input-tag">Item Number :</p>
-          <TextField
+          <CustomTextField
             sx={{ margin: "0 0 20px 0" }}
             name="itemCode"
-            label="Item number"
+            placeholder="Item number"
             variant="outlined"
             color="primary"
             type="text"
@@ -80,10 +124,10 @@ export default function AddInventoryItem() {
             required
           />
           <p className="input-tag">Quantity :</p>
-          <TextField
+          <CustomTextField
             sx={{ margin: "0 0 20px 0" }}
             name="quantity"
-            label="quantity"
+            placeholder="quantity"
             variant="outlined"
             color="primary"
             type="number"

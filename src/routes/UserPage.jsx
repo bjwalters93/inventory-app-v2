@@ -88,10 +88,10 @@ export default function UserPage() {
         elevation={3}
         sx={{
           display: "flex",
-          marginTop: "77.25px",
+          marginTop: "81.25px",
           width: "100%",
           //   border: "1px solid green",
-          height: "calc(100vh - 77.25px)",
+          height: "calc(100vh - 81.25px)",
         }}
       >
         <AddInventoryItem />
