@@ -10,6 +10,28 @@ import { Navigate } from "react-router-dom";
 import { auth } from "../main";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+
+const CustomTextField = styled(TextField)(({ theme }) => ({
+  "& label.Mui-focused": {
+    color: "#7fc900",
+  },
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: "rgb(43, 43, 43)",
+    // borderRadius: "20px",
+    color: "white",
+    "& fieldset": {
+      //   border: "none",
+      //   borderColor: "black",
+    },
+    // "&:hover fieldset": {
+    //   borderColor: "yellow",
+    // },
+    "&.Mui-focused fieldset": {
+      borderColor: "#7fc900",
+    },
+  },
+}));
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -45,13 +67,13 @@ export default function SignIn() {
     return <Navigate to="/home/user-page" />;
   } else if (logInState === "signedOut") {
     return (
-      <Paper elevation={0} className="sign_in_container">
+      <Paper square elevation={0} className="sign_in_container">
         <p className="logo_container">
           <span className="logo_barcode_form">III</span>
           <span className="logo_text_form">Inventory App v2</span>
         </p>
 
-        <h2 style={{ margin: "0px 0 10px 0" }}>Sign in</h2>
+        <h2 style={{ margin: "0px 0 20px 10px", color: "white" }}>Sign in</h2>
         <Paper
           elevation={0}
           sx={{
@@ -60,45 +82,56 @@ export default function SignIn() {
         >
           <Form method="post">
             <Paper elevation={0} className="inputs_flex_signIn">
-              <TextField
+              <p className="sign-in-tag">Email :</p>
+              <CustomTextField
                 sx={{
                   marginBottom: "30px",
                 }}
                 name="email"
-                label="email"
+                placeholder="email"
                 variant="outlined"
                 color="primary"
                 type="email"
+                inputProps={{
+                  autoComplete: "off",
+                }}
               />
-              <TextField
+              <p className="sign-in-tag">Password :</p>
+              <CustomTextField
                 sx={{
                   marginBottom: "30px",
                 }}
                 name="password"
-                label="password"
+                placeholder="password"
                 variant="outlined"
                 color="primary"
                 type="password"
+                inputProps={{
+                  autoComplete: "off",
+                }}
               />
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 size="large"
+                className="sign-in-btn"
               >
                 Sign in
               </Button>
             </Paper>
           </Form>
         </Paper>
-        <p style={{ textAlign: "center" }}>
+        <p style={{ textAlign: "center", color: "white" }}>
           Need an account?{" "}
           <NavLink
             to="../sign-up"
             style={{
               fontWeight: "bold",
               textDecoration: "none",
-              color: "#ed6c02",
+              borderBottom: "2px solid #7fc900",
+              color: "white",
+              marginLeft: "5px",
             }}
           >
             Sign up

@@ -78,7 +78,7 @@ const lightTheme = createTheme({
   palette: {
     mode: "light",
     background: {
-      default: "#f3f3f3",
+      default: "rgb(13, 13, 13)",
     },
   },
 });

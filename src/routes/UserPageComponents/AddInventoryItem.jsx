@@ -31,13 +31,10 @@ import { buildAggregatedQuickFilterApplier } from "@mui/x-data-grid/hooks/featur
 // });
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
-  "& label.Mui-focused": {
-    color: "black",
-  },
   "& .MuiOutlinedInput-root": {
-    backgroundColor: "rgb(231, 231, 231)",
+    backgroundColor: "rgb(43, 43, 43)",
     // borderRadius: "20px",
-    // color: "white",
+    color: "white",
     "& fieldset": {
       //   border: "none",
       //   borderColor: "black",
@@ -46,7 +43,7 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
     //   borderColor: "yellow",
     // },
     "&.Mui-focused fieldset": {
-      borderColor: "#0a9a22",
+      borderColor: "#7fc900",
     },
   },
 }));

@@ -6,7 +6,7 @@
 }
 
 .error-title {
-  color: red;
+  color: #c90000;
   font-size: 50px;
   margin: 0;
 }
@@ -15,12 +15,14 @@
   font-size: 30px;
   margin: 0;
   font-weight: bold;
+  color: white;
 }
 
 .error-message {
   font-weight: bold;
   font-size: 20px;
   margin: 0;
+  color: white;
 }
 
 .logo_container_error {
@@ -31,27 +33,31 @@
 
 .logo_barcode_error {
   font-family: "Libre Barcode 39", cursive;
-  color: #ed6c02;
+  color: #c90000;
+  font-weight: 300;
+  font-style: italic;
 }
 
 .logo_text_error {
   font-family: "Righteous", cursive;
-  margin-left: 5px;
-  color: #1976d2;
+  margin-left: 10px;
+  color: white;
+  letter-spacing: -1px;
+  font-weight: 300;
 }
 
 .error-link {
   font-size: 30px;
   font-weight: bold;
-  color: #1976d2;
+  color: white;
   text-decoration: none;
-  border: 5px solid #1976d2;
+  border: 5px solid white;
   padding: 5px 20px;
   margin: 20px 0 0 0;
   border-radius: 10px;
 }
 
 .error-link:hover {
-  background-color: #ed6c02;
-  color: white;
+  border: 5px solid #7fc900;
+  color: #7fc900;
 }

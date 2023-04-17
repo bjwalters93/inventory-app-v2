@@ -6,6 +6,7 @@
   width: 40%;
   background-color: rgb(23, 23, 23);
   /* margin-top: 40px; */
+  overflow-y: scroll;
 }
 
 .inputs_flex_addItem {
@@ -14,6 +15,7 @@
   flex-direction: column;
   align-items: stretch;
   width: 100%;
+  margin-top: 40px;
 }
 
 .input-tag {
@@ -26,19 +28,20 @@
 
 .submit-btn {
   margin: 20px 0 20px 0;
-  background-color: #086317;
+  background-color: #7fc900;
+  color: black;
   transition: transform 0.1s;
   transform: scale(1);
 }
 
 .submit-btn:hover {
   margin: 20px 0 20px 0;
-  background-color: #0a9a22;
+  background-color: #7fc900;
   transform: scale(1.03);
 }
 
 .reset-btn {
-  background-color: #9a0101;
+  background-color: #c90000;
   color: white;
   margin: 0 0 20px 0;
   font-weight: 700;
