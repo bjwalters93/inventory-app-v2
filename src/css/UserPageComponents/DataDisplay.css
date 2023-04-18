@@ -1,3 +1,8 @@
 .table-container {
   width: 60%;
+  padding: 20px;
+}
+
+.column-header-styles {
+  background-color: rgb(235, 235, 235);
 }

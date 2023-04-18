@@ -11,14 +11,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Root() {
   const [logInState, setLogInState] = useState(null);
-  //   console.log("logInState state:", logInState);
 
   useEffect(() => {
     //Runs only on the first render
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
-        // const uid = user.uid;
+        const uid = user.uid;
         setLogInState("signedIn");
         console.log("onAuthStateChanged fired, user signed in");
         // ...

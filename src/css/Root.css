@@ -65,9 +65,9 @@
 }
 
 .log-out-btn:hover {
-  border: 1px solid rgb(23, 23, 23);
-  background-color: white;
-  color: rgb(23, 23, 23);
+  border: 1px solid #c90000;
+  background-color: rgb(23, 23, 23);
+  color: #c90000;
 }
 /* .header_container {
   width: 100%;

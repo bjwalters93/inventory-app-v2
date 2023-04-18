@@ -5,7 +5,8 @@ import { db } from "../main";
 import { auth } from "../main";
 import { collection, setDoc, doc, getDocs } from "firebase/firestore";
 import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
-import DataDisplay from "./UserPageComponents/DataDisplay";
+import DataDisplayNew from "./UserPageComponents/DataDisplayNew";
+// import DataDisplay from "./UserPageComponents/DataDisplay";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -95,7 +96,8 @@ export default function UserPage() {
         }}
       >
         <AddInventoryItem />
-        <DataDisplay />
+        {/* <DataDisplay /> */}
+        <DataDisplayNew />
       </Paper>
     );
   }

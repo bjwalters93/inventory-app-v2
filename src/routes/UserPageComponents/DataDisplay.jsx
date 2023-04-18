@@ -23,15 +23,70 @@ export default function DataDisplay() {
   }
   console.log(rows);
 
+  //   function processRowUpdate(newRow, oldRow) {
+  //     console.log("newRow:", newRow, "oldRow:", oldRow);
+  //     return newRow;
+  //   }
+
   const columns = [
-    { field: "col1", headerName: "Category", width: 150 },
-    { field: "col2", headerName: "Name", width: 150 },
-    { field: "col3", headerName: "Item Code", width: 150 },
-    { field: "col4", headerName: "Quantity", width: 150 },
+    {
+      field: "col1",
+      headerName: "Category",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description:
+        "Name of the category. I.e Food, Tools, Cleaning Supplies...",
+      editable: true,
+      //   preProcessEditCellProps: (params) => {
+      //     console.log("trial:", params);
+      //     // const hasError = params.props.value.length < 3;
+      //     // return { ...params.props, error: hasError };
+      //   },
+    },
+    {
+      field: "col2",
+      headerName: "Name",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description: "Name of of the product.",
+      editable: true,
+    },
+    {
+      field: "col3",
+      headerName: "Item Code",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description: "Item code, used for serching and scanners.",
+      editable: true,
+    },
+    {
+      field: "col4",
+      headerName: "Quantity",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description: "Number of items available for purchase.",
+      editable: true,
+    },
   ];
   return (
     <Paper square elevation={0} className="table-container">
-      <DataGrid rows={rows} columns={columns} />
+      <DataGrid
+        onRowEditStart={(params, event) => {
+          console.log("startParams:", params, "startEvent:", event);
+        }}
+        onRowEditStop={(params, event) => {
+          console.log("stopParams:", params, "stopEvent:", event);
+        }}
+        editMode="row"
+        rowHeight={30}
+        rows={rows}
+        columns={columns}
+        // processRowUpdate={processRowUpdate}
+      />
     </Paper>
   );
 }
