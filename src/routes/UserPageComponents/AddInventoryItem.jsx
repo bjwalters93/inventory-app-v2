@@ -5,8 +5,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Form } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { withTheme } from "@emotion/react";
-import { buildAggregatedQuickFilterApplier } from "@mui/x-data-grid/hooks/features/filter/gridFilterUtils";
 
 // Reference for styling textfield
 // URL https://aguidehub.com/blog/2022-11-09-how-to-change-mui-textfield-border-color-on-hover-in-react-js/

@@ -34,7 +34,8 @@ export default function FullFeaturedCrudGrid() {
     });
   }
 
-  const [userId, setUserId] = useState(null);
+  console.log("Render:", initialRows.length);
+
   const [rows, setRows] = useState(initialRows);
   const [rowModesModel, setRowModesModel] = useState({});
 
@@ -65,6 +66,7 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const handleDeleteClick = (id) => async () => {
+    setRows(rows.filter((row) => row.id !== id));
     let userId = getUserId();
     console.log(
       "delete:",
@@ -73,7 +75,6 @@ export default function FullFeaturedCrudGrid() {
     const deleteItem = rows.filter((row) => row.id === id);
     console.log(deleteItem[0].col2);
     await deleteDoc(doc(db, userId, deleteItem[0].col2));
-    setRows(rows.filter((row) => row.id !== id));
   };
 
   const handleCancelClick = (id) => () => {
