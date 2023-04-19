@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { onAuthStateChanged } from "firebase/auth";
+import { useState } from "react";
 
 export async function loader() {
   let myPromise = new Promise(function (resolve, reject) {
@@ -64,6 +65,8 @@ export async function action({ request }) {
 }
 
 export default function UserPage() {
+  const [rowTracker, setRowTracker] = useState(false);
+  console.log("rowTracker:", rowTracker);
   const [logInState, setLogInState] = useOutletContext();
   if (logInState === null) {
     return (
@@ -95,9 +98,9 @@ export default function UserPage() {
           height: "calc(100vh - 81.25px)",
         }}
       >
-        <AddInventoryItem />
+        <AddInventoryItem setRowTracker={setRowTracker} />
         {/* <DataDisplay /> */}
-        <DataDisplayNew />
+        <DataDisplayNew rowTracker={rowTracker} />
       </Paper>
     );
   }

@@ -1,7 +1,8 @@
 import "../../css/UserPageComponents/DataDisplay.css";
 import { useLoaderData } from "react-router-dom";
+import { useRevalidator } from "react-router-dom";
 import Paper from "@mui/material/Paper";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
@@ -12,32 +13,53 @@ import {
   GridToolbarContainer,
   GridActionsCellItem,
 } from "@mui/x-data-grid";
-import { doc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../main";
 import { auth } from "../../main";
 
-export default function FullFeaturedCrudGrid() {
-  const inventoryList = useLoaderData();
-  const initialRows = [];
-  for (let i = 0; i < inventoryList.length; i++) {
-    let category = inventoryList[i].category;
-    let name = inventoryList[i].name;
-    let itemCode = inventoryList[i].itemCode;
-    let quantity = inventoryList[i].quantity;
-    let columnNumber = i + 1;
-    initialRows.push({
-      id: columnNumber,
-      col1: category,
-      col2: name,
-      col3: itemCode,
-      col4: quantity,
-    });
-  }
-
-  console.log("Render:", initialRows.length);
-
-  const [rows, setRows] = useState(initialRows);
+export default function FullFeaturedCrudGrid({ rowTracker }) {
+  //   let revalidator = useRevalidator();
+  const inventoryData = useLoaderData();
+  const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+
+  useEffect(() => {
+    //Runs on the first render
+    //And any time any dependency value changes
+    // revalidator.revalidate();
+    async function getAllData() {
+      let userId = getUserId();
+      const data = [];
+      const querySnapshot = await getDocs(collection(db, userId));
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data());
+      });
+      let inventoryList = data;
+      const initialRows = [];
+      for (let i = 0; i < inventoryList.length; i++) {
+        let category = inventoryList[i].category;
+        let name = inventoryList[i].name;
+        let itemCode = inventoryList[i].itemCode;
+        let quantity = inventoryList[i].quantity;
+        let columnNumber = i + 1;
+        initialRows.push({
+          id: columnNumber,
+          col1: category,
+          col2: name,
+          col3: itemCode,
+          col4: quantity,
+        });
+      }
+      setRows(initialRows);
+    }
+    getAllData();
+  }, [rowTracker]);
 
   function getUserId() {
     const user = auth.currentUser;
