@@ -11,13 +11,13 @@ import { db } from "../../main";
 import { auth } from "../../main";
 import { useLoaderData } from "react-router-dom";
 
-export default function FullFeaturedCrudGrid({ rowTracker }) {
-  const x = useLoaderData();
+export default function FullFeaturedCrudGrid() {
+  const data = useLoaderData();
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
-    let inventoryList = x;
+    let inventoryList = data;
     const initialRows = [];
     for (let i = 0; i < inventoryList.length; i++) {
       let category = inventoryList[i].category;
@@ -34,7 +34,7 @@ export default function FullFeaturedCrudGrid({ rowTracker }) {
       });
     }
     setRows(initialRows);
-  }, [x]);
+  }, [data]);
 
   function getUserId() {
     const user = auth.currentUser;
@@ -42,7 +42,7 @@ export default function FullFeaturedCrudGrid({ rowTracker }) {
       const userId = user.uid;
       return userId;
     } else {
-      ("Error unbable to retrieve userId.");
+      throw new Error("Unable to retrieve userId!");
     }
   }
 

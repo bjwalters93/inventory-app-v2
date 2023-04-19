@@ -63,7 +63,6 @@ export async function action({ request }) {
 }
 
 export default function UserPage() {
-  const [rowTracker, setRowTracker] = useState(false);
   const [logInState, setLogInState] = useOutletContext();
   if (logInState === null) {
     return (
@@ -94,8 +93,8 @@ export default function UserPage() {
           height: "calc(100vh - 81.25px)",
         }}
       >
-        <AddInventoryItem setRowTracker={setRowTracker} />
-        <DataDisplayNew rowTracker={rowTracker} />
+        <AddInventoryItem />
+        <DataDisplayNew />
       </Paper>
     );
   }
