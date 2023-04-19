@@ -8,8 +8,8 @@ import CancelIcon from "@mui/icons-material/Close";
 import { GridRowModes, DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { collection, doc, getDocs, deleteDoc } from "firebase/firestore";
 import { db } from "../../main";
-import { auth } from "../../main";
 import { useLoaderData } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export default function FullFeaturedCrudGrid() {
   const data = useLoaderData();
@@ -17,34 +17,19 @@ export default function FullFeaturedCrudGrid() {
   const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
-    let inventoryList = data;
+    const inventoryList = data.inventoryItems;
     const initialRows = [];
     for (let i = 0; i < inventoryList.length; i++) {
-      let category = inventoryList[i].category;
-      let name = inventoryList[i].name;
-      let itemCode = inventoryList[i].itemCode;
-      let quantity = inventoryList[i].quantity;
-      let columnNumber = i + 1;
       initialRows.push({
-        id: columnNumber,
-        col1: category,
-        col2: name,
-        col3: itemCode,
-        col4: quantity,
+        id: i + 1,
+        col1: inventoryList[i].category,
+        col2: inventoryList[i].name,
+        col3: inventoryList[i].itemCode,
+        col4: inventoryList[i].quantity,
       });
     }
     setRows(initialRows);
   }, [data]);
-
-  function getUserId() {
-    const user = auth.currentUser;
-    if (user !== null) {
-      const userId = user.uid;
-      return userId;
-    } else {
-      throw new Error("Unable to retrieve userId!");
-    }
-  }
 
   const handleRowEditStart = (params, event) => {
     event.defaultMuiPrevented = true;
@@ -64,10 +49,9 @@ export default function FullFeaturedCrudGrid() {
 
   const handleDeleteClick = (id) => async () => {
     setRows(rows.filter((row) => row.id !== id));
-    let userId = getUserId();
     const deleteItem = rows.filter((row) => row.id === id);
     console.log(deleteItem[0].col2);
-    await deleteDoc(doc(db, userId, deleteItem[0].col2));
+    await deleteDoc(doc(db, data.userId, deleteItem[0].col2));
   };
 
   const handleCancelClick = (id) => () => {
@@ -143,12 +127,12 @@ export default function FullFeaturedCrudGrid() {
         if (isInEditMode) {
           return [
             <GridActionsCellItem
-              icon={<SaveIcon />}
+              icon={<SaveIcon sx={{ color: "#7fc900" }} />}
               label="Save"
               onClick={handleSaveClick(id)}
             />,
             <GridActionsCellItem
-              icon={<CancelIcon />}
+              icon={<CancelIcon sx={{ color: "#c90000" }} />}
               label="Cancel"
               className="textPrimary"
               onClick={handleCancelClick(id)}
@@ -159,14 +143,14 @@ export default function FullFeaturedCrudGrid() {
 
         return [
           <GridActionsCellItem
-            icon={<EditIcon />}
+            icon={<EditIcon sx={{ color: "#7fc900" }} />}
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon />}
+            icon={<DeleteIcon sx={{ color: "#c90000" }} />}
             label="Delete"
             onClick={handleDeleteClick(id)}
             color="inherit"
@@ -176,19 +160,31 @@ export default function FullFeaturedCrudGrid() {
     },
   ];
 
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+      background: {
+        default: "#121212",
+        paper: "rgb(33, 33, 33)",
+      },
+    },
+  });
+
   return (
-    <Paper square elevation={0} className="table-container">
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        rowHeight={30}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStart={handleRowEditStart}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-      />
-    </Paper>
+    <ThemeProvider theme={darkTheme}>
+      <Paper square elevation={0} className="table-container">
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          editMode="row"
+          rowHeight={30}
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStart={handleRowEditStart}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+        />
+      </Paper>
+    </ThemeProvider>
   );
 }

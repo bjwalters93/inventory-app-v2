@@ -3,7 +3,15 @@ import { useOutletContext } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { db } from "../main";
 import { auth } from "../main";
-import { collection, setDoc, doc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  getDocs,
+  getDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
 // import DataDisplayOld from "./UserPageComponents/DataDisplayOld";
 import DataDisplayNew from "./UserPageComponents/DataDisplayNew";
@@ -11,20 +19,23 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { onAuthStateChanged } from "firebase/auth";
-import { useState } from "react";
 
 export async function loader() {
   let myPromise = new Promise(function (resolve, reject) {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const data = [];
-          const userId = user.uid;
-          const querySnapshot = await getDocs(collection(db, userId));
+          const inventoryData = [];
+          const uid = user.uid;
+          const querySnapshot = await getDocs(collection(db, uid));
           querySnapshot.forEach((doc) => {
-            data.push(doc.data());
+            inventoryData.push(doc.data());
           });
-          resolve(data);
+          const userData = {
+            userId: uid,
+            inventoryItems: inventoryData,
+          };
+          resolve(userData);
         } catch (error) {
           reject(error);
         }
@@ -48,19 +59,53 @@ export async function action({ request }) {
   const formData = await request.formData();
   const formObject = Object.fromEntries(formData);
   const user = auth.currentUser;
+
   if (user !== null) {
     const uid = user.uid;
-    const usersRef = collection(db, uid);
+    const docRef = doc(db, uid, formObject.name);
+    const docSnap = await getDoc(docRef);
 
-    await setDoc(doc(usersRef, formObject.name), {
-      category: formObject.category,
-      name: formObject.name,
-      itemCode: formObject.itemCode,
-      quantity: formObject.quantity,
-    });
+    const q = query(
+      collection(db, uid),
+      where("itemCode", "==", formObject.itemCode)
+    );
+    const querySnapshot = await getDocs(q);
+    console.log(querySnapshot);
+
+    if (docSnap.exists()) {
+      throw new Error("Item name already exists!");
+    } else if (querySnapshot.docs.length > 0) {
+      throw new Error("Item code already exists!");
+    } else {
+      const usersRef = collection(db, uid);
+      await setDoc(doc(usersRef, formObject.name), {
+        category: formObject.category,
+        name: formObject.name,
+        itemCode: formObject.itemCode,
+        quantity: formObject.quantity,
+      });
+    }
   } else throw new Error("Data was not posted, sorry.");
   return formObject;
 }
+
+// export async function action({ request }) {
+//   const formData = await request.formData();
+//   const formObject = Object.fromEntries(formData);
+//   const user = auth.currentUser;
+//   if (user !== null) {
+//     const uid = user.uid;
+//     const usersRef = collection(db, uid);
+
+//     await setDoc(doc(usersRef, formObject.name), {
+//       category: formObject.category,
+//       name: formObject.name,
+//       itemCode: formObject.itemCode,
+//       quantity: formObject.quantity,
+//     });
+//   } else throw new Error("Data was not posted, sorry.");
+//   return formObject;
+// }
 
 export default function UserPage() {
   const [logInState, setLogInState] = useOutletContext();

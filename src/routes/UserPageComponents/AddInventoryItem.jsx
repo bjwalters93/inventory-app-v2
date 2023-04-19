@@ -31,15 +31,8 @@ import { styled } from "@mui/material/styles";
 const CustomTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
     backgroundColor: "rgb(43, 43, 43)",
-    // borderRadius: "20px",
     color: "white",
-    "& fieldset": {
-      //   border: "none",
-      //   borderColor: "black",
-    },
-    // "&:hover fieldset": {
-    //   borderColor: "yellow",
-    // },
+    "& fieldset": {},
     "&.Mui-focused fieldset": {
       borderColor: "#7fc900",
     },
@@ -101,11 +94,11 @@ export default function AddInventoryItem() {
             }}
             required
           />
-          <p className="input-tag">Item Number :</p>
+          <p className="input-tag">Item Code :</p>
           <CustomTextField
             sx={{ margin: "0 0 20px 0" }}
             name="itemCode"
-            placeholder="Item number"
+            placeholder="Item code"
             variant="outlined"
             color="primary"
             type="text"
