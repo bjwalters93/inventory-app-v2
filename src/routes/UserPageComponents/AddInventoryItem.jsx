@@ -46,7 +46,7 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export default function AddInventoryItem({ setRowTracker }) {
+export default function AddInventoryItem() {
   return (
     <Paper square elevation={0} className="addItem_container">
       <h2
@@ -63,11 +63,7 @@ export default function AddInventoryItem({ setRowTracker }) {
       >
         Add Inventory Item
       </h2>
-      <Form
-        method="post"
-        style={{ width: "40%" }}
-        onSubmit={() => setRowTracker((prev) => !prev)}
-      >
+      <Form method="post" style={{ width: "40%" }}>
         <Paper elevation={0} className="inputs_flex_addItem">
           <p className="input-tag">Category :</p>
           <CustomTextField
