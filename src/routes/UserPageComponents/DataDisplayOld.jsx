@@ -9,32 +9,40 @@ import { GridRowModes, DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { collection, doc, getDocs, deleteDoc } from "firebase/firestore";
 import { db } from "../../main";
 import { auth } from "../../main";
-import { useLoaderData } from "react-router-dom";
 
 export default function FullFeaturedCrudGrid({ rowTracker }) {
-  const x = useLoaderData();
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
-    let inventoryList = x;
-    const initialRows = [];
-    for (let i = 0; i < inventoryList.length; i++) {
-      let category = inventoryList[i].category;
-      let name = inventoryList[i].name;
-      let itemCode = inventoryList[i].itemCode;
-      let quantity = inventoryList[i].quantity;
-      let columnNumber = i + 1;
-      initialRows.push({
-        id: columnNumber,
-        col1: category,
-        col2: name,
-        col3: itemCode,
-        col4: quantity,
+    async function getAllData() {
+      let userId = getUserId();
+      const data = [];
+      const querySnapshot = await getDocs(collection(db, userId));
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data());
       });
+      let inventoryList = data;
+      const initialRows = [];
+      for (let i = 0; i < inventoryList.length; i++) {
+        let category = inventoryList[i].category;
+        let name = inventoryList[i].name;
+        let itemCode = inventoryList[i].itemCode;
+        let quantity = inventoryList[i].quantity;
+        let columnNumber = i + 1;
+        initialRows.push({
+          id: columnNumber,
+          col1: category,
+          col2: name,
+          col3: itemCode,
+          col4: quantity,
+        });
+      }
+      //   throw new Error("yikes!!");
+      setRows(initialRows);
     }
-    setRows(initialRows);
-  }, [x]);
+    getAllData();
+  }, [rowTracker]);
 
   function getUserId() {
     const user = auth.currentUser;
@@ -65,6 +73,10 @@ export default function FullFeaturedCrudGrid({ rowTracker }) {
   const handleDeleteClick = (id) => async () => {
     setRows(rows.filter((row) => row.id !== id));
     let userId = getUserId();
+    console.log(
+      "delete:",
+      rows.filter((row) => row.id === id)
+    );
     const deleteItem = rows.filter((row) => row.id === id);
     console.log(deleteItem[0].col2);
     await deleteDoc(doc(db, userId, deleteItem[0].col2));

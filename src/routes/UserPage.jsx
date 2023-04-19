@@ -5,8 +5,8 @@ import { db } from "../main";
 import { auth } from "../main";
 import { collection, setDoc, doc, getDocs } from "firebase/firestore";
 import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
+// import DataDisplayOld from "./UserPageComponents/DataDisplayOld";
 import DataDisplayNew from "./UserPageComponents/DataDisplayNew";
-// import DataDisplay from "./UserPageComponents/DataDisplay";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -47,11 +47,9 @@ export async function loader() {
 export async function action({ request }) {
   const formData = await request.formData();
   const formObject = Object.fromEntries(formData);
-  console.log(formObject);
   const user = auth.currentUser;
   if (user !== null) {
     const uid = user.uid;
-    console.log(uid);
     const usersRef = collection(db, uid);
 
     await setDoc(doc(usersRef, formObject.name), {
@@ -66,7 +64,6 @@ export async function action({ request }) {
 
 export default function UserPage() {
   const [rowTracker, setRowTracker] = useState(false);
-  console.log("rowTracker:", rowTracker);
   const [logInState, setLogInState] = useOutletContext();
   if (logInState === null) {
     return (
@@ -94,12 +91,10 @@ export default function UserPage() {
           display: "flex",
           marginTop: "81.25px",
           width: "100%",
-          //   border: "1px solid green",
           height: "calc(100vh - 81.25px)",
         }}
       >
         <AddInventoryItem setRowTracker={setRowTracker} />
-        {/* <DataDisplay /> */}
         <DataDisplayNew rowTracker={rowTracker} />
       </Paper>
     );
