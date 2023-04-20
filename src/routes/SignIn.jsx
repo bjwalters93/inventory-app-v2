@@ -61,7 +61,7 @@ export default function SignIn() {
         marginLeft: "-100px",
       }}
     >
-      <CircularProgress size={200} thickness={1.5} />
+      <CircularProgress size={200} thickness={1.5} sx={{ color: "#7fc900" }} />
     </Box>;
   } else if (logInState === "signedIn") {
     return <Navigate to="/home/user-page" />;

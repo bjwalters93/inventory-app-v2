@@ -50,7 +50,7 @@ export default function Root() {
         </p>
         {logInState === null ? (
           <Box sx={{ display: "flex", marginRight: "30px" }}>
-            <CircularProgress thickness={3} />
+            <CircularProgress thickness={3} sx={{ color: "#7fc900" }} />
           </Box>
         ) : (
           <Paper

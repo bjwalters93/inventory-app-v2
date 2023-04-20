@@ -6,7 +6,13 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import { GridRowModes, DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { collection, doc, getDocs, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  deleteDoc,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../../main";
 import { useLoaderData } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -76,12 +82,6 @@ export default function FullFeaturedCrudGrid() {
       setRows(rows.filter((row) => row.id !== id));
     }
   };
-
-  //   const processRowUpdate = (newRow) => {
-  //     const updatedRow = { ...newRow, isNew: false };
-  //     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-  //     return updatedRow;
-  //   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -194,12 +194,26 @@ export default function FullFeaturedCrudGrid() {
   const useFakeMutation = () => {
     return React.useCallback(
       (oldRow, newRow, rows) =>
-        new Promise((resolve, reject) => {
+        new Promise(async (resolve, reject) => {
           const findName = rows.find(({ col2 }) => col2 === newRow.col2);
           const findItemCode = rows.find(({ col3 }) => col3 === newRow.col3);
           if (newRow.col2 === "") {
-            reject("Name cannot be empty");
+            reject("Name cannot be empty.");
+          } else if (oldRow.col2 !== newRow.col2 && findName !== undefined) {
+            reject("Unable to save. Item name already exists.");
+          } else if (
+            oldRow.col3 !== newRow.col3 &&
+            findItemCode !== undefined
+          ) {
+            reject("Unable to save. Item code already exists.");
           } else {
+            await deleteDoc(doc(db, data.userId, oldRow.col2));
+            await setDoc(doc(db, data.userId, newRow.col2), {
+              category: newRow.col1,
+              name: newRow.col2,
+              itemCode: newRow.col3,
+              quantity: newRow.col4,
+            });
             resolve(newRow);
           }
         }),
@@ -208,11 +222,17 @@ export default function FullFeaturedCrudGrid() {
   };
 
   function computeMutation(newRow, oldRow) {
+    if (newRow.col1 !== oldRow.col1) {
+      return `Category from '${oldRow.col1 || ""}' to '${newRow.col1 || ""}'`;
+    }
     if (newRow.col2 !== oldRow.col2) {
       return `Name from '${oldRow.col2}' to '${newRow.col2}'`;
     }
     if (newRow.col3 !== oldRow.col3) {
-      return `Age from '${oldRow.col3 || ""}' to '${newRow.col3 || ""}'`;
+      return `Item code from '${oldRow.col3 || ""}' to '${newRow.col3 || ""}'`;
+    }
+    if (newRow.col4 !== oldRow.col4) {
+      return `Quantity from '${oldRow.col4 || ""}' to '${newRow.col4 || ""}'`;
     }
     return null;
   }
@@ -257,6 +277,8 @@ export default function FullFeaturedCrudGrid() {
         children: "User successfully saved",
         severity: "success",
       });
+      const updatedRow = { ...newRow, isNew: false };
+      setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
       resolve(response);
       setPromiseArguments(null);
     } catch (error) {
@@ -322,6 +344,7 @@ export default function FullFeaturedCrudGrid() {
       <Paper square elevation={0} className="table-container">
         {renderConfirmDialog()}
         <DataGrid
+          disableRowSelectionOnClick
           rows={rows}
           columns={columns}
           editMode="row"
@@ -333,7 +356,12 @@ export default function FullFeaturedCrudGrid() {
           processRowUpdate={processRowUpdate}
         />
         {!!snackbar && (
-          <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            open
+            onClose={handleCloseSnackbar}
+            autoHideDuration={6000}
+          >
             <Alert {...snackbar} onClose={handleCloseSnackbar} />
           </Snackbar>
         )}

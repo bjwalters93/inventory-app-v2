@@ -105,7 +105,11 @@ export default function UserPage() {
           marginLeft: "-50px",
         }}
       >
-        <CircularProgress size={100} thickness={1.5} />
+        <CircularProgress
+          size={100}
+          thickness={1.5}
+          sx={{ color: "#7fc900" }}
+        />
       </Box>
     );
   } else if (logInState === "signedOut") {
