@@ -14,11 +14,13 @@ import {
 } from "firebase/firestore";
 import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
 // import DataDisplayOld from "./UserPageComponents/DataDisplayOld";
-import DataDisplayNew from "./UserPageComponents/DataDisplayNew";
+// import DataDisplayNew from "./UserPageComponents/DataDisplayNew";
+import DataDisplayMerge from "./UserPageComponents/DataDisplayMerge";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { onAuthStateChanged } from "firebase/auth";
+import MuiTesting from "./MuiTesting";
 
 export async function loader() {
   let myPromise = new Promise(function (resolve, reject) {
@@ -89,24 +91,6 @@ export async function action({ request }) {
   return formObject;
 }
 
-// export async function action({ request }) {
-//   const formData = await request.formData();
-//   const formObject = Object.fromEntries(formData);
-//   const user = auth.currentUser;
-//   if (user !== null) {
-//     const uid = user.uid;
-//     const usersRef = collection(db, uid);
-
-//     await setDoc(doc(usersRef, formObject.name), {
-//       category: formObject.category,
-//       name: formObject.name,
-//       itemCode: formObject.itemCode,
-//       quantity: formObject.quantity,
-//     });
-//   } else throw new Error("Data was not posted, sorry.");
-//   return formObject;
-// }
-
 export default function UserPage() {
   const [logInState, setLogInState] = useOutletContext();
   if (logInState === null) {
@@ -138,8 +122,10 @@ export default function UserPage() {
           height: "calc(100vh - 81.25px)",
         }}
       >
+        {/* <MuiTesting /> */}
         <AddInventoryItem />
-        <DataDisplayNew />
+        <DataDisplayMerge />
+        {/* <DataDisplayNew /> */}
       </Paper>
     );
   }

@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.0",
     "@mui/x-data-grid": "^6.1.0",
+    "@mui/x-data-grid-generator": "^6.2.0",
     "firebase": "^9.19.1",
     "firebaseui": "^6.0.2",
     "localforage": "^1.10.0",
