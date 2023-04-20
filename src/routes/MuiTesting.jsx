@@ -1,191 +1,107 @@
 import * as React from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import {
-  randomCreatedDate,
-  randomTraderName,
-  randomUpdatedDate,
-} from "@mui/x-data-grid-generator";
-import Snackbar from "@mui/material/Snackbar";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { DataGridPro, GridEditInputCell } from "@mui/x-data-grid-pro";
 
-const useFakeMutation = () => {
-  return React.useCallback(
-    (user) =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (user.name?.trim() === "") {
-            reject();
-          } else {
-            resolve(user);
-          }
-        }, 200);
-      }),
-    []
-  );
-};
+const StyledBox = styled(Box)(({ theme }) => ({
+  height: 400,
+  width: "100%",
+  "& .MuiDataGrid-cell--editable": {
+    backgroundColor:
+      theme.palette.mode === "dark" ? "#376331" : "rgb(217 243 190)",
+    "& .MuiInputBase-root": {
+      height: "100%",
+    },
+  },
+  "& .Mui-error": {
+    backgroundColor: `rgb(126,10,15, ${
+      theme.palette.mode === "dark" ? 0 : 0.1
+    })`,
+    color: theme.palette.mode === "dark" ? "#ff4343" : "#750f0f",
+  },
+}));
 
-function computeMutation(newRow, oldRow) {
-  if (newRow.name !== oldRow.name) {
-    return `Name from '${oldRow.name}' to '${newRow.name}'`;
-  }
-  if (newRow.age !== oldRow.age) {
-    return `Age from '${oldRow.age || ""}' to '${newRow.age || ""}'`;
-  }
-  return null;
+function validateName(username) {
+  const existingUsers = rows.map((row) => row.name.toLowerCase());
+
+  return new Promise((resolve) => {
+    const exists = existingUsers.includes(username.toLowerCase());
+    resolve(exists ? `${username} is already taken.` : null);
+  });
 }
 
-export default function AskConfirmationBeforeSave() {
-  const mutateRow = useFakeMutation();
-  const noButtonRef = React.useRef(null);
-  const [promiseArguments, setPromiseArguments] = React.useState(null);
+const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
+  },
+}));
 
-  const [snackbar, setSnackbar] = React.useState(null);
-
-  const handleCloseSnackbar = () => setSnackbar(null);
-
-  const processRowUpdate = React.useCallback(
-    (newRow, oldRow) =>
-      new Promise((resolve, reject) => {
-        const mutation = computeMutation(newRow, oldRow);
-        if (mutation) {
-          // Save the arguments to resolve or reject the promise later
-          setPromiseArguments({ resolve, reject, newRow, oldRow });
-        } else {
-          resolve(oldRow); // Nothing was changed
-        }
-      }),
-    []
-  );
-
-  const handleNo = () => {
-    const { oldRow, resolve } = promiseArguments;
-    resolve(oldRow); // Resolve with the old row to not update the internal state
-    setPromiseArguments(null);
-  };
-
-  const handleYes = async () => {
-    const { newRow, oldRow, reject, resolve } = promiseArguments;
-
-    try {
-      // Make the HTTP request to save in the backend
-      const response = await mutateRow(newRow);
-      setSnackbar({ children: "User successfully saved", severity: "success" });
-      resolve(response);
-      setPromiseArguments(null);
-    } catch (error) {
-      setSnackbar({ children: "Name can't be empty", severity: "error" });
-      reject(oldRow);
-      setPromiseArguments(null);
-    }
-  };
-
-  const handleEntered = () => {
-    // The `autoFocus` is not used because, if used, the same Enter that saves
-    // the cell triggers "No". Instead, we manually focus the "No" button once
-    // the dialog is fully open.
-    // noButtonRef.current?.focus();
-  };
-  const renderConfirmDialog = () => {
-    if (!promiseArguments) {
-      return null;
-    }
-
-    const { newRow, oldRow } = promiseArguments;
-    const mutation = computeMutation(newRow, oldRow);
-
-    return (
-      <Dialog
-        maxWidth="xs"
-        TransitionProps={{ onEntered: handleEntered }}
-        open={!!promiseArguments}
-      >
-        <DialogTitle>Are you sure?</DialogTitle>
-        <DialogContent dividers>
-          {`Pressing 'Yes' will change ${mutation}.`}
-        </DialogContent>
-        <DialogActions>
-          <Button ref={noButtonRef} onClick={handleNo}>
-            No
-          </Button>
-          <Button onClick={handleYes}>Yes</Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
+function NameEditInputCell(props) {
+  const { error } = props;
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
-      {renderConfirmDialog()}
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdate}
-      />
-      {!!snackbar && (
-        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
-          <Alert {...snackbar} onClose={handleCloseSnackbar} />
-        </Snackbar>
-      )}
-    </div>
+    <StyledTooltip open={!!error} title={error}>
+      <GridEditInputCell {...props} />
+    </StyledTooltip>
   );
 }
 
-const columns = [
-  { field: "name", headerName: "Name", width: 180, editable: true },
-  { field: "age", headerName: "Age", type: "number", editable: true },
-  {
-    field: "dateCreated",
-    headerName: "Date Created",
-    type: "date",
-    width: 180,
-  },
-  {
-    field: "lastLogin",
-    headerName: "Last Login",
-    type: "dateTime",
-    width: 220,
-  },
-];
+function renderEditName(params) {
+  return <NameEditInputCell {...params} />;
+}
+
+export default function ValidateServerNameGrid() {
+  const preProcessEditCellProps = async (params) => {
+    console.log("preProcessEditCellProps params:", params);
+    const errorMessage = await validateName(params.props.value.toString());
+    return { ...params.props, error: errorMessage };
+  };
+
+  const columns = [
+    {
+      field: "name",
+      headerName: "MUI Contributor",
+      width: 180,
+      editable: true,
+      preProcessEditCellProps,
+      renderEditCell: renderEditName,
+    },
+  ];
+
+  return (
+    <StyledBox>
+      <DataGridPro
+        rows={rows}
+        columns={columns}
+        isCellEditable={(params) => params.row.id === 5}
+      />
+    </StyledBox>
+  );
+}
 
 const rows = [
   {
     id: 1,
-    name: randomTraderName(),
-    age: 25,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    name: "Damien",
   },
   {
     id: 2,
-    name: randomTraderName(),
-    age: 36,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    name: "Olivier",
   },
   {
     id: 3,
-    name: randomTraderName(),
-    age: 19,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    name: "Danail",
   },
   {
     id: 4,
-    name: randomTraderName(),
-    age: 28,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    name: "Matheus",
   },
   {
     id: 5,
-    name: randomTraderName(),
-    age: 23,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    name: "You?",
   },
 ];

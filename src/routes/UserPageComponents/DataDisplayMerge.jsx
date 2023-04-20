@@ -5,14 +5,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
-import { GridRowModes, DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import {
-  collection,
-  doc,
-  getDocs,
-  deleteDoc,
-  setDoc,
-} from "firebase/firestore";
+  GridRowModes,
+  DataGrid,
+  GridActionsCellItem,
+  useGridApiRef,
+} from "@mui/x-data-grid";
+import { doc, deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../../main";
 import { useLoaderData } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -24,10 +23,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { GridEditInputCell } from "@mui/x-data-grid-pro";
 
 export default function FullFeaturedCrudGrid() {
   // ---------------------------------------------------------------------------------------------
-  //   MAINT TABLE FEATURES AND DATA LOAD
+  //   MUI TABLE FEATURES AND DATA LOAD
   // ---------------------------------------------------------------------------------------------
   const data = useLoaderData();
   const [rows, setRows] = useState([]);
@@ -87,110 +90,11 @@ export default function FullFeaturedCrudGrid() {
     setRowModesModel(newRowModesModel);
   };
 
-  const columns = [
-    {
-      field: "col1",
-      headerName: "Category",
-      headerClassName: "column-header-styles",
-      flex: 1,
-      headerAlign: "center",
-      description:
-        "Name of the category. I.e Food, Tools, Cleaning Supplies...",
-      editable: true,
-    },
-    {
-      field: "col2",
-      headerName: "Name",
-      headerClassName: "column-header-styles",
-      flex: 1,
-      headerAlign: "center",
-      description: "Name of of the product.",
-      editable: true,
-    },
-    {
-      field: "col3",
-      headerName: "Item Code",
-      headerClassName: "column-header-styles",
-      flex: 1,
-      headerAlign: "center",
-      description: "Item code, used for serching and scanners.",
-      editable: true,
-    },
-    {
-      field: "col4",
-      headerName: "Quantity",
-      headerClassName: "column-header-styles",
-      flex: 1,
-      headerAlign: "center",
-      description: "Number of items available for purchase.",
-      editable: true,
-    },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      headerClassName: "column-header-styles",
-      width: 100,
-      cellClassName: "actions",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon sx={{ color: "#7fc900" }} />}
-              label="Save"
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon sx={{ color: "#c90000" }} />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon sx={{ color: "#7fc900" }} />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon sx={{ color: "#c90000" }} />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
-    },
-  ];
   // ---------------------------------------------------------------------------------------------
   // ---------------------------------------------------------------------------------------------
   // ---------------------------------------------------------------------------------------------
   //   MUI CODE FOR VALIDATING AND SAVING DATA
   // ---------------------------------------------------------------------------------------------
-  //   const useFakeMutation = () => {
-  //     return React.useCallback(
-  //       (oldRow, newRow) =>
-  //         new Promise((resolve, reject) => {
-  //           setTimeout(() => {
-  //             if (oldRow.col2 === newRow.col2 || newRow.col2 === "") {
-  //               reject();
-  //             } else {
-  //               resolve(newRow);
-  //             }
-  //           }, 200);
-  //         }),
-  //       []
-  //     );
-  //   };
-
   const useFakeMutation = () => {
     return React.useCallback(
       (oldRow, newRow, rows) =>
@@ -274,7 +178,7 @@ export default function FullFeaturedCrudGrid() {
       // Make the HTTP request to save in the backend
       const response = await mutateRow(oldRow, newRow, rows);
       setSnackbar({
-        children: "User successfully saved",
+        children: "Changes successfully saved",
         severity: "success",
       });
       const updatedRow = { ...newRow, isNew: false };
@@ -288,12 +192,8 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  const handleEntered = () => {
-    // The `autoFocus` is not used because, if used, the same Enter that saves
-    // the cell triggers "No". Instead, we manually focus the "No" button once
-    // the dialog is fully open.
-    // noButtonRef.current?.focus();
-  };
+  const handleEntered = () => {};
+
   const renderConfirmDialog = () => {
     if (!promiseArguments) {
       return null;
@@ -321,6 +221,76 @@ export default function FullFeaturedCrudGrid() {
       </Dialog>
     );
   };
+  // ---------------------------------------------------------------------------------------------
+  //   CODE FOR PRE-PROCESSING USER INPUTS - MUI
+  // ---------------------------------------------------------------------------------------------
+  const StyledBox = styled(Box)(({ theme }) => ({
+    height: 400,
+    width: "100%",
+    "& .MuiDataGrid-cell--editable": {
+      backgroundColor:
+        theme.palette.mode === "dark" ? "#376331" : "rgb(217 243 190)",
+      "& .MuiInputBase-root": {
+        height: "100%",
+      },
+    },
+    "& .Mui-error": {
+      backgroundColor: `rgb(126,10,15, ${
+        theme.palette.mode === "dark" ? 0 : 0.1
+      })`,
+      color: theme.palette.mode === "dark" ? "#ff4343" : "#750f0f",
+    },
+  }));
+
+  //   function validateName(username) {
+  //     const existingUsers = rows.map((row) => row.name.toLowerCase());
+  //     return new Promise((resolve) => {
+  //       const exists = existingUsers.includes(username.toLowerCase());
+  //       resolve(exists ? `${username} is already taken.` : null);
+  //     });
+  //   }
+
+  const apiRef = useGridApiRef();
+
+  function validateName(value) {
+    let field = apiRef.current.getCellParams(1, "col2");
+    console.log(field);
+    const existingName = rows.map((row) => row.col2);
+    // const existingItemCode = rows.map((row) => row.col3);
+    return new Promise((resolve) => {
+      const exists = existingName.includes(value);
+      resolve(exists ? `${value} is already taken.` : null);
+    });
+  }
+
+  const StyledTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.error.main,
+      color: theme.palette.error.contrastText,
+    },
+  }));
+
+  function NameEditInputCell(props) {
+    const { error } = props;
+
+    return (
+      <StyledTooltip open={!!error} title={error}>
+        <GridEditInputCell {...props} />
+      </StyledTooltip>
+    );
+  }
+
+  function renderEditName(params) {
+    return <NameEditInputCell {...params} />;
+  }
+
+  const preProcessEditCellProps = async (params) => {
+    console.log("preProcessEditCellProps params:", params);
+    const errorMessage = await validateName(params.props.value.toString());
+    return { ...params.props, error: errorMessage };
+  };
 
   // ---------------------------------------------------------------------------------------------
   // ---------------------------------------------------------------------------------------------
@@ -338,6 +308,97 @@ export default function FullFeaturedCrudGrid() {
   });
   // ---------------------------------------------------------------------------------------------
   // ---------------------------------------------------------------------------------------------
+  const columns = [
+    {
+      field: "col1",
+      headerName: "Category",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description:
+        "Name of the category. I.e Food, Tools, Cleaning Supplies...",
+      editable: true,
+      preProcessEditCellProps,
+      renderEditCell: renderEditName,
+    },
+    {
+      field: "col2",
+      headerName: "Name",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description: "Name of of the product.",
+      editable: true,
+      preProcessEditCellProps,
+      renderEditCell: renderEditName,
+    },
+    {
+      field: "col3",
+      headerName: "Item Code",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description: "Item code, used for serching and scanners.",
+      editable: true,
+      preProcessEditCellProps,
+      renderEditCell: renderEditName,
+    },
+    {
+      field: "col4",
+      headerName: "Quantity",
+      headerClassName: "column-header-styles",
+      flex: 1,
+      headerAlign: "center",
+      description: "Number of items available for purchase.",
+      editable: true,
+      preProcessEditCellProps,
+      renderEditCell: renderEditName,
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      headerClassName: "column-header-styles",
+      width: 100,
+      cellClassName: "actions",
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon sx={{ color: "#7fc900" }} />}
+              label="Save"
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon sx={{ color: "#c90000" }} />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon sx={{ color: "#7fc900" }} />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon sx={{ color: "#c90000" }} />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -354,6 +415,7 @@ export default function FullFeaturedCrudGrid() {
           onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          apiRef={apiRef}
         />
         {!!snackbar && (
           <Snackbar

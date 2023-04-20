@@ -129,7 +129,6 @@ export default function UserPage() {
         {/* <MuiTesting /> */}
         <AddInventoryItem />
         <DataDisplayMerge />
-        {/* <DataDisplayNew /> */}
       </Paper>
     );
   }
