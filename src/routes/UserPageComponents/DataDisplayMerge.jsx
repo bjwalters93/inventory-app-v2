@@ -276,11 +276,16 @@ export default function FullFeaturedCrudGrid() {
   const cellParams = useRef(null);
 
   const apiRef = useGridApiRef();
+  //   ---------USE THESE FOR SEARCH AND FIND ABILITY...TO BE ADDED IN FUTURE
+  // involves scrollToIndex, selectRow, getRowIndexRelativeToVisibleRows, getColumnIndexRelativeToVisibleColumns
+  // ----------------------------------------------------------------------------------------------------------
+  // let field = apiRef.current.selectRow(5, true);
+  // let rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
+  // console.log(rowIndex);
+  // ----------------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------------
 
   function validateName(value) {
-    let field = apiRef.current.selectRow(5, true);
-    let rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
-    console.log(rowIndex);
     const existingName = rows.map((row) => row.col2);
     // const existingItemCode = rows.map((row) => row.col3);
     return new Promise((resolve) => {
@@ -419,7 +424,7 @@ export default function FullFeaturedCrudGrid() {
           processRowUpdate={processRowUpdate}
           onCellKeyDown={(params) => {
             cellParams.current = params.field;
-            console.log("cellParams:", params);
+            console.log("cellParams:", cellParams);
           }}
           apiRef={apiRef}
         />
