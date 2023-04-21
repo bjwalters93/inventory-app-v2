@@ -224,19 +224,14 @@ export default function FullFeaturedCrudGrid() {
   // ---------------------------------------------------------------------------------------------
   //   CODE FOR PRE-PROCESSING USER INPUTS - MUI
   // ---------------------------------------------------------------------------------------------
-  const StyledBox = styled(Box)(({ theme }) => ({
-    height: 400,
-    width: "100%",
-    "& .MuiDataGrid-cell--editable": {
+  const StyledPaper = styled(Paper)(({ theme }) => ({
+    "& .MuiDataGrid-row--editable": {
       backgroundColor:
-        theme.palette.mode === "dark" ? "#376331" : "rgb(217 243 190)",
-      "& .MuiInputBase-root": {
-        height: "100%",
-      },
+        theme.palette.mode === "dark" ? "rgb(33, 33, 33)" : "rgb(217 243 190)",
     },
     "& .Mui-error": {
       backgroundColor: `rgb(126,10,15, ${
-        theme.palette.mode === "dark" ? 0 : 0.1
+        theme.palette.mode === "dark" ? 0.5 : 0.1
       })`,
       color: theme.palette.mode === "dark" ? "#ff4343" : "#750f0f",
     },
@@ -265,11 +260,10 @@ export default function FullFeaturedCrudGrid() {
     return <NameEditInputCell {...params} />;
   }
 
-  const cellParams = useRef(null);
-
-  const apiRef = useGridApiRef();
   //   ---------USE THESE FOR SEARCH AND FIND ABILITY...TO BE ADDED IN FUTURE
   // involves scrollToIndex, selectRow, getRowIndexRelativeToVisibleRows, getColumnIndexRelativeToVisibleColumns
+  const apiRef = useGridApiRef();
+  const cellParams = useRef(null);
   // ----------------------------------------------------------------------------------------------------------
   // let field = apiRef.current.selectRow(5, true);
   // let rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
@@ -483,7 +477,7 @@ export default function FullFeaturedCrudGrid() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Paper square elevation={0} className="table-container">
+      <StyledPaper square elevation={0} className="table-container">
         {renderConfirmDialog()}
         <DataGrid
           rows={rows}
@@ -499,6 +493,11 @@ export default function FullFeaturedCrudGrid() {
             cellParams.current = params.field;
           }}
           apiRef={apiRef}
+          sx={{
+            "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
+              outline: "1px solid #7fc900",
+            },
+          }}
         />
         {!!snackbar && (
           <Snackbar
@@ -510,7 +509,7 @@ export default function FullFeaturedCrudGrid() {
             <Alert {...snackbar} onClose={handleCloseSnackbar} />
           </Snackbar>
         )}
-      </Paper>
+      </StyledPaper>
     </ThemeProvider>
   );
 }
