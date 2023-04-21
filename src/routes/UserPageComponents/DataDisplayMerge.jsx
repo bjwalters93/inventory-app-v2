@@ -279,10 +279,21 @@ export default function FullFeaturedCrudGrid() {
 
   function validateCategory(value, oldRow) {
     console.log("category:", value);
+    return new Promise((resolve) => {
+      var re = new RegExp("^[A-Z][a-z]*(?: [A-Z][a-z]*)*$");
+      resolve(
+        value === ""
+          ? "Field cannot be empty"
+          : !re.test(value)
+          ? "Only letters are allowed. First letter must be capitalized."
+          : value.length > 20
+          ? "Cannot be longer then 20 characters."
+          : null
+      );
+    });
   }
 
   const preProcessEditCellPropsCategory = async (params) => {
-    console.log("preProcessEditCellProps params:", params);
     const errorMessage = await validateCategory(params.props.value, params.row);
     return { ...params.props, error: errorMessage };
   };
@@ -328,7 +339,7 @@ export default function FullFeaturedCrudGrid() {
           : value === ""
           ? "Field cannot be empty"
           : !re.test(value)
-          ? "Only capital letters and numbers allowed."
+          ? "Must be 10 characters long. Only capital letters and numbers allowed. No spaces."
           : value.length > 10
           ? "Cannot be longer then 10 characters."
           : null
@@ -337,17 +348,27 @@ export default function FullFeaturedCrudGrid() {
   }
 
   const preProcessEditCellPropsItemCode = async (params) => {
-    console.log("preProcessEditCellProps params:", params);
     const errorMessage = await validateItemCode(params.props.value, params.row);
     return { ...params.props, error: errorMessage };
   };
 
   function validateQuantity(value, oldRow) {
-    console.log(value);
+    console.log("quantity:", typeof value);
+    return new Promise((resolve) => {
+      var re = new RegExp("^[0-9]*$");
+      resolve(
+        value === ""
+          ? "Field cannot be empty"
+          : !re.test(value)
+          ? "Only numbers are allowed."
+          : value.length > 5
+          ? "Please choose a number between 0 and 10,000"
+          : null
+      );
+    });
   }
 
   const preProcessEditCellPropsQuantity = async (params) => {
-    console.log("preProcessEditCellProps params:", params);
     const errorMessage = await validateQuantity(params.props.value, params.row);
     return { ...params.props, error: errorMessage };
   };
