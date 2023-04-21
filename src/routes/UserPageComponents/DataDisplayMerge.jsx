@@ -1,6 +1,6 @@
 import "../../css/UserPageComponents/DataDisplay.css";
 import Paper from "@mui/material/Paper";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
@@ -250,19 +250,6 @@ export default function FullFeaturedCrudGrid() {
   //     });
   //   }
 
-  const apiRef = useGridApiRef();
-
-  function validateName(value) {
-    let field = apiRef.current.getCellParams(1, "col2");
-    console.log(field);
-    const existingName = rows.map((row) => row.col2);
-    // const existingItemCode = rows.map((row) => row.col3);
-    return new Promise((resolve) => {
-      const exists = existingName.includes(value);
-      resolve(exists ? `${value} is already taken.` : null);
-    });
-  }
-
   const StyledTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -284,6 +271,22 @@ export default function FullFeaturedCrudGrid() {
 
   function renderEditName(params) {
     return <NameEditInputCell {...params} />;
+  }
+
+  const cellParams = useRef(null);
+
+  const apiRef = useGridApiRef();
+
+  function validateName(value) {
+    let field = apiRef.current.selectRow(5, true);
+    let rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
+    console.log(rowIndex);
+    const existingName = rows.map((row) => row.col2);
+    // const existingItemCode = rows.map((row) => row.col3);
+    return new Promise((resolve) => {
+      const exists = existingName.includes(value);
+      resolve(exists ? `${value} is already taken.` : null);
+    });
   }
 
   const preProcessEditCellProps = async (params) => {
@@ -405,7 +408,6 @@ export default function FullFeaturedCrudGrid() {
       <Paper square elevation={0} className="table-container">
         {renderConfirmDialog()}
         <DataGrid
-          disableRowSelectionOnClick
           rows={rows}
           columns={columns}
           editMode="row"
@@ -415,6 +417,10 @@ export default function FullFeaturedCrudGrid() {
           onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          onCellKeyDown={(params) => {
+            cellParams.current = params.field;
+            console.log("cellParams:", params);
+          }}
           apiRef={apiRef}
         />
         {!!snackbar && (
