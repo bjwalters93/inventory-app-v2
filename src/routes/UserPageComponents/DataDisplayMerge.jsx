@@ -242,14 +242,6 @@ export default function FullFeaturedCrudGrid() {
     },
   }));
 
-  //   function validateName(username) {
-  //     const existingUsers = rows.map((row) => row.name.toLowerCase());
-  //     return new Promise((resolve) => {
-  //       const exists = existingUsers.includes(username.toLowerCase());
-  //       resolve(exists ? `${username} is already taken.` : null);
-  //     });
-  //   }
-
   const StyledTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -285,18 +277,78 @@ export default function FullFeaturedCrudGrid() {
   // ----------------------------------------------------------------------------------------------------------
   // ----------------------------------------------------------------------------------------------------------
 
-  function validateName(value) {
-    const existingName = rows.map((row) => row.col2);
-    // const existingItemCode = rows.map((row) => row.col3);
+  function validateCategory(value, oldRow) {
+    console.log("category:", value);
+  }
+
+  const preProcessEditCellPropsCategory = async (params) => {
+    console.log("preProcessEditCellProps params:", params);
+    const errorMessage = await validateCategory(params.props.value, params.row);
+    return { ...params.props, error: errorMessage };
+  };
+
+  function validateName(value, oldRow) {
+    console.log("name:", value);
     return new Promise((resolve) => {
-      const exists = existingName.includes(value);
-      resolve(exists ? `${value} is already taken.` : null);
+      const existingName = rows
+        .filter((row) => row.col2 !== oldRow.col2)
+        .map((row) => row.col2);
+      const nameExists = existingName.includes(value);
+      var re = new RegExp("^[A-Z][a-z]*(?: [A-Z][a-z]*)*$");
+      resolve(
+        nameExists
+          ? `${value} is already taken.`
+          : value === ""
+          ? "Field cannot be empty"
+          : !re.test(value)
+          ? "Only letters are allowed. First letter must be capitalized."
+          : value.length > 20
+          ? "Cannot be longer then 20 characters."
+          : null
+      );
     });
   }
 
-  const preProcessEditCellProps = async (params) => {
+  const preProcessEditCellPropsName = async (params) => {
+    const errorMessage = await validateName(params.props.value, params.row);
+    return { ...params.props, error: errorMessage };
+  };
+
+  function validateItemCode(value, oldRow) {
+    console.log("itemCode:", value);
+    return new Promise((resolve) => {
+      const existingItemCode = rows
+        .filter((row) => row.col3 !== oldRow.col3)
+        .map((row) => row.col3);
+      const itemCodeExists = existingItemCode.includes(value);
+      var re = new RegExp("^[A-Z0-9]{10,}");
+      resolve(
+        itemCodeExists
+          ? `${value} is already taken.`
+          : value === ""
+          ? "Field cannot be empty"
+          : !re.test(value)
+          ? "Only capital letters and numbers allowed."
+          : value.length > 10
+          ? "Cannot be longer then 10 characters."
+          : null
+      );
+    });
+  }
+
+  const preProcessEditCellPropsItemCode = async (params) => {
     console.log("preProcessEditCellProps params:", params);
-    const errorMessage = await validateName(params.props.value.toString());
+    const errorMessage = await validateItemCode(params.props.value, params.row);
+    return { ...params.props, error: errorMessage };
+  };
+
+  function validateQuantity(value, oldRow) {
+    console.log(value);
+  }
+
+  const preProcessEditCellPropsQuantity = async (params) => {
+    console.log("preProcessEditCellProps params:", params);
+    const errorMessage = await validateQuantity(params.props.value, params.row);
     return { ...params.props, error: errorMessage };
   };
 
@@ -326,7 +378,7 @@ export default function FullFeaturedCrudGrid() {
       description:
         "Name of the category. I.e Food, Tools, Cleaning Supplies...",
       editable: true,
-      preProcessEditCellProps,
+      preProcessEditCellProps: preProcessEditCellPropsCategory,
       renderEditCell: renderEditName,
     },
     {
@@ -337,7 +389,7 @@ export default function FullFeaturedCrudGrid() {
       headerAlign: "center",
       description: "Name of of the product.",
       editable: true,
-      preProcessEditCellProps,
+      preProcessEditCellProps: preProcessEditCellPropsName,
       renderEditCell: renderEditName,
     },
     {
@@ -348,7 +400,7 @@ export default function FullFeaturedCrudGrid() {
       headerAlign: "center",
       description: "Item code, used for serching and scanners.",
       editable: true,
-      preProcessEditCellProps,
+      preProcessEditCellProps: preProcessEditCellPropsItemCode,
       renderEditCell: renderEditName,
     },
     {
@@ -359,7 +411,7 @@ export default function FullFeaturedCrudGrid() {
       headerAlign: "center",
       description: "Number of items available for purchase.",
       editable: true,
-      preProcessEditCellProps,
+      preProcessEditCellProps: preProcessEditCellPropsQuantity,
       renderEditCell: renderEditName,
     },
     {
@@ -424,7 +476,6 @@ export default function FullFeaturedCrudGrid() {
           processRowUpdate={processRowUpdate}
           onCellKeyDown={(params) => {
             cellParams.current = params.field;
-            console.log("cellParams:", cellParams);
           }}
           apiRef={apiRef}
         />
