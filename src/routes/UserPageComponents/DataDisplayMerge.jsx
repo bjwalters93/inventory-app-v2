@@ -27,6 +27,7 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { GridEditInputCell } from "@mui/x-data-grid-pro";
+import Modal from "@mui/material/Modal";
 
 export default function FullFeaturedCrudGrid() {
   // ---------------------------------------------------------------------------------------------
@@ -92,11 +93,6 @@ export default function FullFeaturedCrudGrid() {
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
-
-    // const editedRow = rows.find((row) => row.id === id);
-    // if (editedRow.isNew) {
-    //   setRows(rows.filter((row) => row.id !== id));
-    // }
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
@@ -108,23 +104,41 @@ export default function FullFeaturedCrudGrid() {
   // ---------------------------------------------------------------------------------------------
   //   MUI CODE FOR VALIDATING AND SAVING DATA
   // ---------------------------------------------------------------------------------------------
+  //   const useFakeMutation = () => {
+  //     return React.useCallback(
+  //       (oldRow, newRow, rows) =>
+  //         new Promise(async (resolve, reject) => {
+  //           const findName = rows.find(({ col2 }) => col2 === newRow.col2);
+  //           const findItemCode = rows.find(({ col3 }) => col3 === newRow.col3);
+  //           if (newRow.col2 === "") {
+  //             reject("Name cannot be empty.");
+  //           } else if (oldRow.col2 !== newRow.col2 && findName !== undefined) {
+  //             reject("Unable to save. Item name already exists.");
+  //           } else if (
+  //             oldRow.col3 !== newRow.col3 &&
+  //             findItemCode !== undefined
+  //           ) {
+  //             reject("Unable to save. Item code already exists.");
+  //           } else {
+  //             await deleteDoc(doc(db, data.userId, oldRow.col2));
+  //             await setDoc(doc(db, data.userId, newRow.col2), {
+  //               category: newRow.col1,
+  //               name: newRow.col2,
+  //               itemCode: newRow.col3,
+  //               quantity: newRow.col4,
+  //             });
+  //             resolve(newRow);
+  //           }
+  //         }),
+  //       []
+  //     );
+  //   };
+
   const useFakeMutation = () => {
     return React.useCallback(
       (oldRow, newRow, rows) =>
         new Promise(async (resolve, reject) => {
-          console.log("use fake mutation fired!");
-          const findName = rows.find(({ col2 }) => col2 === newRow.col2);
-          const findItemCode = rows.find(({ col3 }) => col3 === newRow.col3);
-          if (newRow.col2 === "") {
-            reject("Name cannot be empty.");
-          } else if (oldRow.col2 !== newRow.col2 && findName !== undefined) {
-            reject("Unable to save. Item name already exists.");
-          } else if (
-            oldRow.col3 !== newRow.col3 &&
-            findItemCode !== undefined
-          ) {
-            reject("Unable to save. Item code already exists.");
-          } else {
+          try {
             await deleteDoc(doc(db, data.userId, oldRow.col2));
             await setDoc(doc(db, data.userId, newRow.col2), {
               category: newRow.col1,
@@ -133,6 +147,8 @@ export default function FullFeaturedCrudGrid() {
               quantity: newRow.col4,
             });
             resolve(newRow);
+          } catch {
+            reject("Error: Unable to update data!");
           }
         }),
       []
@@ -142,20 +158,24 @@ export default function FullFeaturedCrudGrid() {
   const mutateRow = useFakeMutation();
 
   function computeMutation(newRow, oldRow) {
-    console.log("compute mutation fired!");
+    const mutationsArray = [];
     if (newRow.col1 !== oldRow.col1) {
-      return `Category from '${oldRow.col1 || ""}' to '${newRow.col1 || ""}'`;
+      mutationsArray.push(`Category from '${oldRow.col1}' to '${newRow.col1}'`);
     }
     if (newRow.col2 !== oldRow.col2) {
-      return `Name from '${oldRow.col2}' to '${newRow.col2}'`;
+      mutationsArray.push(`Name from '${oldRow.col2}' to '${newRow.col2}'`);
     }
     if (newRow.col3 !== oldRow.col3) {
-      return `Item code from '${oldRow.col3 || ""}' to '${newRow.col3 || ""}'`;
+      mutationsArray.push(
+        `Item code from '${oldRow.col3}' to '${newRow.col3}'`
+      );
     }
     if (newRow.col4 !== oldRow.col4) {
-      return `Quantity from '${oldRow.col4 || ""}' to '${newRow.col4 || ""}'`;
+      mutationsArray.push(`Quantity from ${oldRow.col4} to ${newRow.col4}`);
     }
-    return null;
+    if (mutationsArray.length === 0) {
+      return null;
+    } else return mutationsArray;
   }
 
   const handleCloseSnackbar = () => setSnackbar(null);
@@ -163,14 +183,12 @@ export default function FullFeaturedCrudGrid() {
   const processRowUpdate = React.useCallback(
     (newRow, oldRow) =>
       new Promise((resolve, reject) => {
-        console.log("process row update fired");
         const mutation = computeMutation(newRow, oldRow);
         if (mutation) {
-          // Save the arguments to resolve or reject the promise later
           setPromiseArguments({ resolve, reject, newRow, oldRow });
         } else {
           console.log("!!!!!!!!");
-          resolve(oldRow); // Nothing was changed
+          resolve(oldRow);
         }
       }),
     []
@@ -178,7 +196,7 @@ export default function FullFeaturedCrudGrid() {
 
   const handleNo = () => {
     const { oldRow, resolve } = promiseArguments;
-    resolve(oldRow); // Resolve with the old row to not update the internal state
+    resolve(oldRow);
     setPromiseArguments(null);
   };
 
@@ -186,7 +204,6 @@ export default function FullFeaturedCrudGrid() {
     const { newRow, oldRow, reject, resolve } = promiseArguments;
 
     try {
-      // Make the HTTP request to save in the backend
       const response = await mutateRow(oldRow, newRow, rows);
       setSnackbar({
         children: "Changes successfully saved",
@@ -212,6 +229,13 @@ export default function FullFeaturedCrudGrid() {
 
     const { newRow, oldRow } = promiseArguments;
     const mutation = computeMutation(newRow, oldRow);
+    const changes = mutation.map((element, index) => {
+      return (
+        <li key={index} style={{ margin: "5px 0" }}>
+          {element}
+        </li>
+      );
+    });
 
     return (
       <Dialog
@@ -219,15 +243,40 @@ export default function FullFeaturedCrudGrid() {
         TransitionProps={{ onEntered: handleEntered }}
         open={!!promiseArguments}
       >
-        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogTitle sx={{ backgroundColor: "#c90000", color: "white" }}>
+          Are you sure?
+        </DialogTitle>
         <DialogContent dividers>
-          {`Pressing 'Yes' will change ${mutation}.`}
+          <p style={{ margin: "10px 0 10px 0", fontSize: "18px" }}>
+            Pressing 'Yes' will make these changes.
+          </p>
+          <ul style={{ margin: "10px 0" }}>{changes}</ul>
         </DialogContent>
         <DialogActions>
-          <Button ref={noButtonRef} onClick={handleNo}>
+          <Button
+            sx={{
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#c90000",
+              },
+            }}
+            ref={noButtonRef}
+            onClick={handleNo}
+          >
             No
           </Button>
-          <Button onClick={handleYes}>Yes</Button>
+          <Button
+            sx={{
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#7fc900",
+                color: "black",
+              },
+            }}
+            onClick={handleYes}
+          >
+            Yes
+          </Button>
         </DialogActions>
       </Dialog>
     );
@@ -235,18 +284,6 @@ export default function FullFeaturedCrudGrid() {
   // ---------------------------------------------------------------------------------------------
   //   CODE FOR PRE-PROCESSING USER INPUTS - MUI
   // ---------------------------------------------------------------------------------------------
-  const StyledPaper = styled(Paper)(({ theme }) => ({
-    "& .MuiDataGrid-row--editable": {
-      backgroundColor:
-        theme.palette.mode === "dark" ? "rgb(33, 33, 33)" : "rgb(217 243 190)",
-    },
-    "& .Mui-error": {
-      backgroundColor: `rgb(126,10,15, ${
-        theme.palette.mode === "dark" ? 0.5 : 0.1
-      })`,
-      color: theme.palette.mode === "dark" ? "#ff4343" : "#750f0f",
-    },
-  }));
 
   const StyledTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -258,7 +295,6 @@ export default function FullFeaturedCrudGrid() {
   }));
 
   function validateCategory(value, oldRow) {
-    console.log("category:", value);
     return new Promise((resolve) => {
       var re = new RegExp("^[A-Z][a-z]*(?: [A-Z][a-z]*)*$");
       resolve(
@@ -279,7 +315,6 @@ export default function FullFeaturedCrudGrid() {
   };
 
   function validateName(value, oldRow) {
-    console.log("name:", value);
     return new Promise((resolve) => {
       const existingName = rows
         .filter((row) => row.col2 !== oldRow.col2)
@@ -306,7 +341,6 @@ export default function FullFeaturedCrudGrid() {
   };
 
   function validateItemCode(value, oldRow) {
-    console.log("itemCode:", value);
     return new Promise((resolve) => {
       const existingItemCode = rows
         .filter((row) => row.col3 !== oldRow.col3)
@@ -333,7 +367,6 @@ export default function FullFeaturedCrudGrid() {
   };
 
   function validateQuantity(value, oldRow) {
-    console.log("quantity:", typeof value);
     return new Promise((resolve) => {
       var re = new RegExp("^[0-9]*$");
       resolve(
@@ -349,7 +382,6 @@ export default function FullFeaturedCrudGrid() {
   }
 
   const preProcessEditCellPropsQuantity = async (params) => {
-    console.log(params);
     const errorMessage = await validateQuantity(params.props.value, params.row);
     return { ...params.props, error: errorMessage };
   };
@@ -473,6 +505,18 @@ export default function FullFeaturedCrudGrid() {
       },
     },
   });
+
+  const lightTheme = createTheme({
+    palette: {
+      mode: "light",
+      error: {
+        main: "#c90000",
+      },
+      success: {
+        main: "#7fc900",
+      },
+    },
+  });
   // ---------------------------------------------------------------------------------------------
   // ---------------------------------------------------------------------------------------------
 
@@ -498,9 +542,16 @@ export default function FullFeaturedCrudGrid() {
             "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
               outline: "1px solid #7fc900",
             },
+            "& .MuiDataGrid-row--editable": {
+              backgroundColor: "rgb(33, 33, 33)",
+            },
+            "& .Mui-error": {
+              backgroundColor: `rgb(126,10,15,.5)`,
+              color: "#ff4343",
+            },
           }}
         />
-        {!!snackbar && (
+        {/* {!!snackbar && (
           <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             open
@@ -509,6 +560,27 @@ export default function FullFeaturedCrudGrid() {
           >
             <Alert {...snackbar} onClose={handleCloseSnackbar} />
           </Snackbar>
+        )} */}
+        {!!snackbar && (
+          <ThemeProvider theme={lightTheme}>
+            <Modal open onClose={handleCloseSnackbar}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 400,
+                  bgcolor: "background.paper",
+                  //   border: "2px solid #000",
+                  boxShadow: 24,
+                  // p: 4,
+                }}
+              >
+                <Alert {...snackbar} />
+              </Box>
+            </Modal>
+          </ThemeProvider>
         )}
       </Paper>
     </ThemeProvider>
