@@ -35,6 +35,19 @@ export default function FullFeaturedCrudGrid() {
   const data = useLoaderData();
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const noButtonRef = React.useRef(null);
+  const [promiseArguments, setPromiseArguments] = React.useState(null);
+  const [snackbar, setSnackbar] = React.useState(null);
+  //   ---------USE THESE FOR SEARCH AND FIND ABILITY...TO BE ADDED IN FUTURE
+  // involves scrollToIndex, selectRow, getRowIndexRelativeToVisibleRows, getColumnIndexRelativeToVisibleColumns
+  const apiRef = useGridApiRef();
+  const cellParams = useRef(null);
+  // ----------------------------------------------------------------------------------------------------------
+  // let field = apiRef.current.selectRow(5, true);
+  // let rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
+  // console.log(rowIndex);
+  // ----------------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
     const inventoryList = data.inventoryItems;
@@ -80,10 +93,10 @@ export default function FullFeaturedCrudGrid() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
+    // const editedRow = rows.find((row) => row.id === id);
+    // if (editedRow.isNew) {
+    //   setRows(rows.filter((row) => row.id !== id));
+    // }
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
@@ -99,6 +112,7 @@ export default function FullFeaturedCrudGrid() {
     return React.useCallback(
       (oldRow, newRow, rows) =>
         new Promise(async (resolve, reject) => {
+          console.log("use fake mutation fired!");
           const findName = rows.find(({ col2 }) => col2 === newRow.col2);
           const findItemCode = rows.find(({ col3 }) => col3 === newRow.col3);
           if (newRow.col2 === "") {
@@ -125,7 +139,10 @@ export default function FullFeaturedCrudGrid() {
     );
   };
 
+  const mutateRow = useFakeMutation();
+
   function computeMutation(newRow, oldRow) {
+    console.log("compute mutation fired!");
     if (newRow.col1 !== oldRow.col1) {
       return `Category from '${oldRow.col1 || ""}' to '${newRow.col1 || ""}'`;
     }
@@ -141,18 +158,12 @@ export default function FullFeaturedCrudGrid() {
     return null;
   }
 
-  const mutateRow = useFakeMutation();
-  const noButtonRef = React.useRef(null);
-  const [promiseArguments, setPromiseArguments] = React.useState(null);
-  console.log("promiseArguments:", promiseArguments);
-
-  const [snackbar, setSnackbar] = React.useState(null);
-
   const handleCloseSnackbar = () => setSnackbar(null);
 
   const processRowUpdate = React.useCallback(
     (newRow, oldRow) =>
       new Promise((resolve, reject) => {
+        console.log("process row update fired");
         const mutation = computeMutation(newRow, oldRow);
         if (mutation) {
           // Save the arguments to resolve or reject the promise later
@@ -246,31 +257,6 @@ export default function FullFeaturedCrudGrid() {
     },
   }));
 
-  function NameEditInputCell(props) {
-    const { error } = props;
-
-    return (
-      <StyledTooltip open={!!error} title={error}>
-        <GridEditInputCell {...props} />
-      </StyledTooltip>
-    );
-  }
-
-  function renderEditName(params) {
-    return <NameEditInputCell {...params} />;
-  }
-
-  //   ---------USE THESE FOR SEARCH AND FIND ABILITY...TO BE ADDED IN FUTURE
-  // involves scrollToIndex, selectRow, getRowIndexRelativeToVisibleRows, getColumnIndexRelativeToVisibleColumns
-  const apiRef = useGridApiRef();
-  const cellParams = useRef(null);
-  // ----------------------------------------------------------------------------------------------------------
-  // let field = apiRef.current.selectRow(5, true);
-  // let rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
-  // console.log(rowIndex);
-  // ----------------------------------------------------------------------------------------------------------
-  // ----------------------------------------------------------------------------------------------------------
-
   function validateCategory(value, oldRow) {
     console.log("category:", value);
     return new Promise((resolve) => {
@@ -363,26 +349,27 @@ export default function FullFeaturedCrudGrid() {
   }
 
   const preProcessEditCellPropsQuantity = async (params) => {
+    console.log(params);
     const errorMessage = await validateQuantity(params.props.value, params.row);
     return { ...params.props, error: errorMessage };
   };
 
+  function NameEditInputCell(props) {
+    const { error } = props;
+
+    return (
+      <StyledTooltip open={!!error} title={error}>
+        <GridEditInputCell {...props} />
+      </StyledTooltip>
+    );
+  }
+
+  function renderEditName(params) {
+    return <NameEditInputCell {...params} />;
+  }
   // ---------------------------------------------------------------------------------------------
   // ---------------------------------------------------------------------------------------------
-  // ---------------------------------------------------------------------------------------------
-  // THEME FOR MUI TABLE STYLE/COLOR
-  // ---------------------------------------------------------------------------------------------
-  const darkTheme = createTheme({
-    palette: {
-      mode: "dark",
-      background: {
-        default: "#121212",
-        paper: "rgb(33, 33, 33)",
-      },
-    },
-  });
-  // ---------------------------------------------------------------------------------------------
-  // ---------------------------------------------------------------------------------------------
+
   const columns = [
     {
       field: "col1",
@@ -474,10 +461,24 @@ export default function FullFeaturedCrudGrid() {
       },
     },
   ];
+  // ---------------------------------------------------------------------------------------------
+  // THEME FOR MUI TABLE STYLE/COLOR
+  // ---------------------------------------------------------------------------------------------
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+      background: {
+        default: "#121212",
+        paper: "rgb(33, 33, 33)",
+      },
+    },
+  });
+  // ---------------------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------------------
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <StyledPaper square elevation={0} className="table-container">
+      <Paper square elevation={0} className="table-container">
         {renderConfirmDialog()}
         <DataGrid
           rows={rows}
@@ -509,7 +510,7 @@ export default function FullFeaturedCrudGrid() {
             <Alert {...snackbar} onClose={handleCloseSnackbar} />
           </Snackbar>
         )}
-      </StyledPaper>
+      </Paper>
     </ThemeProvider>
   );
 }
