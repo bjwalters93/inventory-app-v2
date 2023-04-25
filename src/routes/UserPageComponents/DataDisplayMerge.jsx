@@ -16,7 +16,6 @@ import { db } from "../../main";
 import { useLoaderData } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as React from "react";
-import Snackbar from "@mui/material/Snackbar";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -64,7 +63,40 @@ export default function FullFeaturedCrudGrid() {
         col4: inventoryList[i].quantity,
       });
     }
+    // ----------------------------------------------------------------------------------------------------------
+    // Code for select and scroll to. Remove to go back to original loading.
+    // ----------------------------------------------------------------------------------------------------------
+    if (initialRows.length > rows.length && rows.length !== 0) {
+      const arr1 = initialRows.map((item) => item.col2);
+      const arr2 = rows.map((item) => item.col2);
+      const difference = arr1
+        .filter((x) => !arr2.includes(x))
+        .concat(arr2.filter((x) => !arr1.includes(x)));
+      const found = initialRows.find(
+        (element) => element.col2 === difference[0]
+      );
+      setTimeout(() => {
+        const selectedRows = apiRef.current.getSelectedRows();
+        let rowValue;
+        for (const x of selectedRows.values()) {
+          rowValue = x;
+        }
+        if (rowValue !== undefined) {
+          apiRef.current.selectRow(rowValue.id, false);
+        }
+        apiRef.current.scrollToIndexes({
+          rowIndex: found.id - 1,
+          colIndex: 0,
+        });
+        apiRef.current.selectRow(found.id, true);
+      }, 100);
+    } else {
+      apiRef.current.selectRow(1, true);
+    }
+    // ----------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------
     setRows(initialRows);
+    // row index = row id - 1 ??
   }, [data]);
 
   const handleRowEditStart = (params, event) => {
