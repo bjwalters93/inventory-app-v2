@@ -36,9 +36,11 @@ export default function FullFeaturedCrudGrid() {
   const data = useLoaderData();
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  const noButtonRef = React.useRef(null);
-  const [promiseArguments, setPromiseArguments] = React.useState(null);
-  const [snackbar, setSnackbar] = React.useState(null);
+  const noButtonRef = useRef(null);
+  const [promiseArguments, setPromiseArguments] = useState(null);
+  const [snackbar, setSnackbar] = useState(null);
+  const [deleteConditions, setDeleteConditions] = useState(false);
+  const [idDeleteRow, setIdDeleteRow] = useState(null);
   //   ---------USE THESE FOR SEARCH AND FIND ABILITY...TO BE ADDED IN FUTURE
   // involves scrollToIndex, selectRow, getRowIndexRelativeToVisibleRows, getColumnIndexRelativeToVisibleColumns
   const apiRef = useGridApiRef();
@@ -81,11 +83,9 @@ export default function FullFeaturedCrudGrid() {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id) => async () => {
-    setRows(rows.filter((row) => row.id !== id));
-    const deleteItem = rows.filter((row) => row.id === id);
-    console.log(deleteItem[0].col2);
-    await deleteDoc(doc(db, data.userId, deleteItem[0].col2));
+  const handleDeleteClick = (id) => () => {
+    setIdDeleteRow(id);
+    setDeleteConditions(true);
   };
 
   const handleCancelClick = (id) => () => {
@@ -104,35 +104,6 @@ export default function FullFeaturedCrudGrid() {
   // ---------------------------------------------------------------------------------------------
   //   MUI CODE FOR VALIDATING AND SAVING DATA
   // ---------------------------------------------------------------------------------------------
-  //   const useFakeMutation = () => {
-  //     return React.useCallback(
-  //       (oldRow, newRow, rows) =>
-  //         new Promise(async (resolve, reject) => {
-  //           const findName = rows.find(({ col2 }) => col2 === newRow.col2);
-  //           const findItemCode = rows.find(({ col3 }) => col3 === newRow.col3);
-  //           if (newRow.col2 === "") {
-  //             reject("Name cannot be empty.");
-  //           } else if (oldRow.col2 !== newRow.col2 && findName !== undefined) {
-  //             reject("Unable to save. Item name already exists.");
-  //           } else if (
-  //             oldRow.col3 !== newRow.col3 &&
-  //             findItemCode !== undefined
-  //           ) {
-  //             reject("Unable to save. Item code already exists.");
-  //           } else {
-  //             await deleteDoc(doc(db, data.userId, oldRow.col2));
-  //             await setDoc(doc(db, data.userId, newRow.col2), {
-  //               category: newRow.col1,
-  //               name: newRow.col2,
-  //               itemCode: newRow.col3,
-  //               quantity: newRow.col4,
-  //             });
-  //             resolve(newRow);
-  //           }
-  //         }),
-  //       []
-  //     );
-  //   };
 
   const useFakeMutation = () => {
     return React.useCallback(
@@ -147,8 +118,8 @@ export default function FullFeaturedCrudGrid() {
               quantity: newRow.col4,
             });
             resolve(newRow);
-          } catch {
-            reject("Error: Unable to update data!");
+          } catch (error) {
+            reject(error.message);
           }
         }),
       []
@@ -281,6 +252,69 @@ export default function FullFeaturedCrudGrid() {
       </Dialog>
     );
   };
+
+  async function handleConfirmDelete() {
+    const id = idDeleteRow;
+    setRows(rows.filter((row) => row.id !== id));
+    const deleteItem = rows.filter((row) => row.id === id);
+    console.log(deleteItem[0].col2);
+    await deleteDoc(doc(db, data.userId, deleteItem[0].col2));
+    setDeleteConditions(false);
+    setIdDeleteRow(null);
+  }
+
+  function handleCancelDelete() {
+    setDeleteConditions(false);
+    setIdDeleteRow(null);
+  }
+
+  function renderDeleteDialog() {
+    if (!deleteConditions) {
+      return null;
+    }
+    return (
+      <Dialog
+        maxWidth="xs"
+        TransitionProps={{ onEntered: handleEntered }}
+        open={deleteConditions}
+      >
+        <DialogTitle sx={{ backgroundColor: "#c90000", color: "white" }}>
+          Are you sure?
+        </DialogTitle>
+        <DialogContent dividers>
+          <p style={{ margin: "10px 0 10px 0", fontSize: "18px" }}>
+            Pressing 'Delete' will permanently delete this item.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            sx={{
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#c90000",
+              },
+            }}
+            ref={noButtonRef}
+            onClick={handleCancelDelete}
+          >
+            Cancel
+          </Button>
+          <Button
+            sx={{
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#7fc900",
+                color: "black",
+              },
+            }}
+            onClick={handleConfirmDelete}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
   // ---------------------------------------------------------------------------------------------
   //   CODE FOR PRE-PROCESSING USER INPUTS - MUI
   // ---------------------------------------------------------------------------------------------
@@ -494,7 +528,7 @@ export default function FullFeaturedCrudGrid() {
     },
   ];
   // ---------------------------------------------------------------------------------------------
-  // THEME FOR MUI TABLE STYLE/COLOR
+  // THEMES
   // ---------------------------------------------------------------------------------------------
   const darkTheme = createTheme({
     palette: {
@@ -524,6 +558,7 @@ export default function FullFeaturedCrudGrid() {
     <ThemeProvider theme={darkTheme}>
       <Paper square elevation={0} className="table-container">
         {renderConfirmDialog()}
+        {renderDeleteDialog()}
         <DataGrid
           rows={rows}
           columns={columns}
@@ -551,16 +586,6 @@ export default function FullFeaturedCrudGrid() {
             },
           }}
         />
-        {/* {!!snackbar && (
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            open
-            onClose={handleCloseSnackbar}
-            autoHideDuration={6000}
-          >
-            <Alert {...snackbar} onClose={handleCloseSnackbar} />
-          </Snackbar>
-        )} */}
         {!!snackbar && (
           <ThemeProvider theme={lightTheme}>
             <Modal open onClose={handleCloseSnackbar}>
@@ -572,9 +597,7 @@ export default function FullFeaturedCrudGrid() {
                   transform: "translate(-50%, -50%)",
                   width: 400,
                   bgcolor: "background.paper",
-                  //   border: "2px solid #000",
                   boxShadow: 24,
-                  // p: 4,
                 }}
               >
                 <Alert {...snackbar} />
@@ -586,3 +609,38 @@ export default function FullFeaturedCrudGrid() {
     </ThemeProvider>
   );
 }
+
+// ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+//   MUI CODE FOR VALIDATING AND SAVING DATA
+// ---------------------------------------------------------------------------------------------
+//   const useFakeMutation = () => {
+//     return React.useCallback(
+//       (oldRow, newRow, rows) =>
+//         new Promise(async (resolve, reject) => {
+//           const findName = rows.find(({ col2 }) => col2 === newRow.col2);
+//           const findItemCode = rows.find(({ col3 }) => col3 === newRow.col3);
+//           if (newRow.col2 === "") {
+//             reject("Name cannot be empty.");
+//           } else if (oldRow.col2 !== newRow.col2 && findName !== undefined) {
+//             reject("Unable to save. Item name already exists.");
+//           } else if (
+//             oldRow.col3 !== newRow.col3 &&
+//             findItemCode !== undefined
+//           ) {
+//             reject("Unable to save. Item code already exists.");
+//           } else {
+//             await deleteDoc(doc(db, data.userId, oldRow.col2));
+//             await setDoc(doc(db, data.userId, newRow.col2), {
+//               category: newRow.col1,
+//               name: newRow.col2,
+//               itemCode: newRow.col3,
+//               quantity: newRow.col4,
+//             });
+//             resolve(newRow);
+//           }
+//         }),
+//       []
+//     );
+//   };
