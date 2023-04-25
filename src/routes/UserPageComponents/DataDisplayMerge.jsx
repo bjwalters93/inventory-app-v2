@@ -218,10 +218,10 @@ export default function FullFeaturedCrudGrid() {
           Are you sure?
         </DialogTitle>
         <DialogContent dividers>
-          <p style={{ margin: "10px 0 10px 0", fontSize: "18px" }}>
+          <p style={{ margin: "10px 0 10px 0", fontSize: "16px" }}>
             Pressing 'Yes' will make these changes.
           </p>
-          <ul style={{ margin: "10px 0" }}>{changes}</ul>
+          <ul style={{ margin: "10px 0", fontSize: "14px" }}>{changes}</ul>
         </DialogContent>
         <DialogActions>
           <Button
@@ -282,7 +282,7 @@ export default function FullFeaturedCrudGrid() {
           Are you sure?
         </DialogTitle>
         <DialogContent dividers>
-          <p style={{ margin: "10px 0 10px 0", fontSize: "18px" }}>
+          <p style={{ margin: "10px 0 10px 0", fontSize: "14px" }}>
             Pressing 'Delete' will permanently delete this item.
           </p>
         </DialogContent>
