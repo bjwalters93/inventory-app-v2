@@ -19,6 +19,10 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { onAuthStateChanged } from "firebase/auth";
 
+// [Feature]: Multiple actions per page/route.
+// Link to referance to multi actions/loaders per page.
+// https://github.com/remix-run/react-router/issues/9538
+
 export async function loader() {
   let myPromise = new Promise(function (resolve, reject) {
     onAuthStateChanged(auth, async (user) => {

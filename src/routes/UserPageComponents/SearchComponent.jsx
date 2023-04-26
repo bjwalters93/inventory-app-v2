@@ -7,12 +7,6 @@ export default function SearchComponent() {
   // Reference for styling textfield
   // URL https://aguidehub.com/blog/2022-11-09-how-to-change-mui-textfield-border-color-on-hover-in-react-js/
   const CustomSearch = styled(TextField)({
-    // "& label.Mui-focused": {
-    //   color: "green",
-    // },
-    // "& .MuiInput-underline:after": {
-    //   borderBottomColor: "green",
-    // },
     "& .MuiOutlinedInput-root": {
       backgroundColor: "rgb(63, 63, 63)",
       color: "white",
