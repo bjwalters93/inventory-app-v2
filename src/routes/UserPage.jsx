@@ -43,7 +43,7 @@ export async function loader({ request }) {
               console.log(userData);
               resolve(userData);
             } else {
-              throw new Error("No such item exists!");
+              reject("No such item exists!");
             }
           } else {
             const inventoryData = [];

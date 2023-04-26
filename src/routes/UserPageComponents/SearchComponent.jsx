@@ -28,7 +28,6 @@ export default function SearchComponent() {
       <CustomSearch
         id="search"
         name="search"
-        // type="search"
         variant="outlined"
         size="small"
         placeholder="Search items"
