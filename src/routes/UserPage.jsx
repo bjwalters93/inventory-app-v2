@@ -13,14 +13,11 @@ import {
   where,
 } from "firebase/firestore";
 import AddInventoryItem from "./UserPageComponents/AddInventoryItem";
-// import DataDisplayOld from "./UserPageComponents/DataDisplayOld";
-// import DataDisplayNew from "./UserPageComponents/DataDisplayNew";
 import DataDisplayMerge from "./UserPageComponents/DataDisplayMerge";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { onAuthStateChanged } from "firebase/auth";
-import MuiTesting from "./MuiTesting";
 
 export async function loader() {
   let myPromise = new Promise(function (resolve, reject) {
@@ -126,7 +123,6 @@ export default function UserPage() {
           height: "calc(100vh - 81.25px)",
         }}
       >
-        {/* <MuiTesting /> */}
         <AddInventoryItem />
         <DataDisplayMerge />
       </Paper>

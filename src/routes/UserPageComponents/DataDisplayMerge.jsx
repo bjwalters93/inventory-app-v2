@@ -27,6 +27,7 @@ import Box from "@mui/material/Box";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { GridEditInputCell } from "@mui/x-data-grid-pro";
 import Modal from "@mui/material/Modal";
+import SearchComponent from "./SearchComponent";
 
 export default function FullFeaturedCrudGrid() {
   // ---------------------------------------------------------------------------------------------
@@ -40,16 +41,8 @@ export default function FullFeaturedCrudGrid() {
   const [snackbar, setSnackbar] = useState(null);
   const [deleteConditions, setDeleteConditions] = useState(false);
   const [idDeleteRow, setIdDeleteRow] = useState(null);
-  //   ---------USE THESE FOR SEARCH AND FIND ABILITY...TO BE ADDED IN FUTURE
-  // involves scrollToIndex, selectRow, getRowIndexRelativeToVisibleRows, getColumnIndexRelativeToVisibleColumns
   const apiRef = useGridApiRef();
   const cellParams = useRef(null);
-  // ----------------------------------------------------------------------------------------------------------
-  // let field = apiRef.current.selectRow(5, true);
-  // let rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
-  // console.log(rowIndex);
-  // ----------------------------------------------------------------------------------------------------------
-  // ----------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
     const inventoryList = data.inventoryItems;
@@ -589,6 +582,7 @@ export default function FullFeaturedCrudGrid() {
   return (
     <ThemeProvider theme={darkTheme}>
       <Paper square elevation={0} className="table-container">
+        <SearchComponent />
         {renderConfirmDialog()}
         {renderDeleteDialog()}
         <DataGrid
@@ -606,6 +600,7 @@ export default function FullFeaturedCrudGrid() {
           }}
           apiRef={apiRef}
           sx={{
+            width: "100%",
             "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
               outline: "1px solid #7fc900",
             },

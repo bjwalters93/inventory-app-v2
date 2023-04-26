@@ -1,0 +1,48 @@
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import { styled } from "@mui/material/styles";
+
+export default function SearchComponent() {
+  // Reference for styling textfield
+  // URL https://aguidehub.com/blog/2022-11-09-how-to-change-mui-textfield-border-color-on-hover-in-react-js/
+  const CustomSearch = styled(TextField)({
+    // "& label.Mui-focused": {
+    //   color: "green",
+    // },
+    // "& .MuiInput-underline:after": {
+    //   borderBottomColor: "green",
+    // },
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "rgb(63, 63, 63)",
+      color: "white",
+      borderRadius: "20px",
+      "& fieldset": {
+        border: "none",
+      },
+      "&:hover fieldset": {
+        border: "1px solid white",
+      },
+      "&.Mui-focused fieldset": {
+        border: "1px solid #7fc900",
+      },
+    },
+  });
+  return (
+    <CustomSearch
+      variant="outlined"
+      size="small"
+      placeholder="Search items"
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+      }}
+      sx={{
+        margin: "0 0 20px 0",
+      }}
+    />
+  );
+}

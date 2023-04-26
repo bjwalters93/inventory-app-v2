@@ -1,40 +1,19 @@
 import "../../css/UserPageComponents/AddInventoryItem.css";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Form } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
-// Reference for styling textfield
-// URL https://aguidehub.com/blog/2022-11-09-how-to-change-mui-textfield-border-color-on-hover-in-react-js/
-// const CssTextField = styled(TextField)({
-//   "& label.Mui-focused": {
-//     color: "green",
-//   },
-//   "& .MuiInput-underline:after": {
-//     borderBottomColor: "green",
-//   },
-//   "& .MuiOutlinedInput-root": {
-//     "& fieldset": {
-//       borderColor: "red",
-//     },
-//     "&:hover fieldset": {
-//       borderColor: "yellow",
-//     },
-//     "&.Mui-focused fieldset": {
-//       borderColor: "green",
-//     },
-//   },
-// });
-
 const CustomTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
     backgroundColor: "rgb(43, 43, 43)",
     color: "white",
-    "& fieldset": {},
+    "&:hover fieldset": {
+      border: "1px solid white",
+    },
     "&.Mui-focused fieldset": {
-      borderColor: "#7fc900",
+      border: "1px solid #7fc900 ",
     },
   },
 }));
@@ -150,3 +129,25 @@ export default function AddInventoryItem() {
     </Paper>
   );
 }
+
+// Reference for styling textfield
+// URL https://aguidehub.com/blog/2022-11-09-how-to-change-mui-textfield-border-color-on-hover-in-react-js/
+// const CssTextField = styled(TextField)({
+//   "& label.Mui-focused": {
+//     color: "green",
+//   },
+//   "& .MuiInput-underline:after": {
+//     borderBottomColor: "green",
+//   },
+//   "& .MuiOutlinedInput-root": {
+//     "& fieldset": {
+//       borderColor: "red",
+//     },
+//     "&:hover fieldset": {
+//       borderColor: "yellow",
+//     },
+//     "&.Mui-focused fieldset": {
+//       borderColor: "green",
+//     },
+//   },
+// });
