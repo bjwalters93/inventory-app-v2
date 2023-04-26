@@ -2,6 +2,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
+import { Form } from "react-router-dom";
 
 export default function SearchComponent() {
   // Reference for styling textfield
@@ -23,20 +24,25 @@ export default function SearchComponent() {
     },
   });
   return (
-    <CustomSearch
-      variant="outlined"
-      size="small"
-      placeholder="Search items"
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-      }}
-      sx={{
-        margin: "0 0 20px 0",
-      }}
-    />
+    <Form id="search-form" role="search">
+      <CustomSearch
+        id="search"
+        name="search"
+        // type="search"
+        variant="outlined"
+        size="small"
+        placeholder="Search items"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+        sx={{
+          margin: "0 0 20px 0",
+        }}
+      />
+    </Form>
   );
 }

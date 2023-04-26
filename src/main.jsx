@@ -69,7 +69,7 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route path="sign-up" element={<SignUp />} action={signUpAction} />
-      <Route path="test-data" element={<TestData db={db} />} />
+      {/* <Route path="test-data" element={<TestData db={db} />} /> */}
     </Route>
   )
 );
