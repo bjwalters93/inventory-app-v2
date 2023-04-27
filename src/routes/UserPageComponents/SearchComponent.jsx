@@ -3,6 +3,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
 import { Form } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
 
 export default function SearchComponent() {
   // Reference for styling textfield
@@ -31,10 +32,15 @@ export default function SearchComponent() {
         variant="outlined"
         size="small"
         placeholder="Search items"
+        inputProps={{
+          autoComplete: "off",
+        }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <SearchIcon />
+              <IconButton type="submit">
+                <SearchIcon />
+              </IconButton>
             </InputAdornment>
           ),
         }}

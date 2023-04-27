@@ -59,7 +59,10 @@ export default function FullFeaturedCrudGrid() {
     // ----------------------------------------------------------------------------------------------------------
     // Code for select and scroll to. Remove to go back to original loading.
     // ----------------------------------------------------------------------------------------------------------
-    if (initialRows.length > rows.length && rows.length !== 0) {
+    const rowDifference = initialRows.length - rows.length;
+    if (rowDifference === 1) {
+      console.log("rows:", rows);
+      console.log("intitialRows:", initialRows);
       const arr1 = initialRows.map((item) => item.col2);
       const arr2 = rows.map((item) => item.col2);
       const difference = arr1
