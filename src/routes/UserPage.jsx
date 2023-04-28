@@ -105,7 +105,6 @@ export async function action({ request }) {
         name: formObject.name,
         itemCode: formObject.itemCode,
         quantity: formObject.quantity,
-        owner: uid,
       });
     }
   } else throw new Error("Data was not posted, sorry.");
