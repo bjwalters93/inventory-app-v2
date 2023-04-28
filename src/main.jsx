@@ -55,6 +55,20 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
+import Typesense from "typesense";
+
+export let client = new Typesense.Client({
+  nodes: [
+    {
+      host: "svlxcz4dy5b6uma9p-1.a1.typesense.net", // where xxx is the ClusterID of your Typesense Cloud cluster
+      port: "443",
+      protocol: "https",
+    },
+  ],
+  apiKey: "kgjLJZHUD4UZSxP16vzfMycVlFjeH4Cw",
+  connectionTimeoutSeconds: 2,
+});
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>

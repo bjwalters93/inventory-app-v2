@@ -4,6 +4,7 @@ import { Form, redirect } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import Box from "@mui/material/Box";
 import { auth } from "../main";
+import { client } from "../main";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -17,6 +18,24 @@ export async function action({ request }) {
       password
     );
     const user = userCredential.user;
+    console.log("user:", user.uid);
+    let userId = user.uid;
+    // Every 'collection' in Typesense needs a schema. A collection only
+    // needs to be created one time before you index your first document.
+    //
+    // Alternatively, use auto schema detection:
+    // https://typesense.org/docs/latest/api/collections.html#with-auto-schema-detection
+    const userCollection = {
+      name: userId,
+      fields: [
+        { name: "category", type: "string" },
+        { name: "name", type: "string" },
+        { name: "itemCode", type: "string" },
+        { name: "quantity", type: "string" },
+        { name: "owner", type: "string" },
+      ],
+    };
+    await client.collections().create(userCollection);
     return user ? redirect(`/home/user-page`) : null;
   } catch (error) {
     throw new Error(error);
